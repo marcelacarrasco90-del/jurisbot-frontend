@@ -4,46 +4,54 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JurisBot Laboral Chile</title>
+
+<!-- ══ GA4: reemplaza G-XXXXXXXXXX con tu Measurement ID real ══
+     Obtén tu ID en: analytics.google.com → Admin → Data Streams -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
+
+<!-- ══ PWA ══ -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a3a5c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JurisBot">
+
 <style>
+/* ══ RESET & VARIABLES ══ */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--p:#1a3a5c;--a:#c0392b;--g:#27ae60;--bg:#f4f6f9;--card:#fff;--t:#2c3e50;--m:#7f8c8d;--b:#dce3ec;--purple:#8e44ad}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--t);height:100vh;display:flex;flex-direction:column;overflow:hidden}
 
-/* ??????????????????????????????????????????
-   MEJORA 2: MODAL DISCLAIMER
-   ?????????????????????????????????????????? */
-#disclaimerOverlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.65);
-  display:flex;align-items:center;justify-content:center;
-  z-index:9999;padding:16px;
-}
-#disclaimerBox{
-  background:#fff;border-radius:14px;max-width:520px;width:100%;
-  box-shadow:0 8px 40px rgba(0,0,0,.25);overflow:hidden;
-}
+/* ══ DISCLAIMER MODAL ══ */
+#disclaimerOverlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}
+#disclaimerBox{background:#fff;border-radius:14px;max-width:520px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25);overflow:hidden}
 .disc-header{background:var(--p);color:#fff;padding:18px 22px;display:flex;align-items:center;gap:12px}
-.disc-header .disc-icon{font-size:28px}
-.disc-header h2{font-size:15px;font-weight:700}
+.disc-icon{font-size:28px}
+.disc-header h2{font-size:14px;font-weight:700;line-height:1.3}
 .disc-header p{font-size:10px;opacity:.75;margin-top:2px}
 .disc-body{padding:20px 22px;max-height:55vh;overflow-y:auto;font-size:12px;line-height:1.75;color:var(--t)}
 .disc-body::-webkit-scrollbar{width:4px}.disc-body::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
 .disc-section{margin-bottom:14px}
 .disc-section h3{font-size:11px;font-weight:700;color:var(--a);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
-.disc-section p{color:#444}
-.disc-check{display:flex;align-items:flex-start;gap:10px;background:#f4f6f9;border-radius:8px;padding:12px 14px;margin-top:10px;cursor:pointer}
+.disc-numeral{background:#fff8f8;border:1px solid #f5c6c6;border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.disc-numeral-row{display:flex;gap:10px}
+.disc-n{font-weight:700;color:var(--a);flex-shrink:0}
+.disc-check{display:flex;align-items:flex-start;gap:10px;background:#f4f6f9;border-radius:8px;padding:12px 14px;margin-top:12px}
 .disc-check input[type=checkbox]{width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:var(--p);cursor:pointer}
 .disc-check label{font-size:11px;font-weight:600;color:var(--p);cursor:pointer;line-height:1.5}
 .disc-footer{padding:14px 22px;border-top:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;gap:12px;background:#fafbfc}
 .disc-footer p{font-size:10px;color:var(--m);flex:1}
-#discAcceptBtn{
-  background:var(--p);color:#fff;border:none;border-radius:8px;
-  padding:10px 22px;font-size:12px;font-weight:700;cursor:pointer;
-  opacity:.4;pointer-events:none;transition:all .25s;white-space:nowrap;
-}
+#discAcceptBtn{background:var(--p);color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:12px;font-weight:700;cursor:pointer;opacity:.4;pointer-events:none;transition:all .25s;white-space:nowrap}
 #discAcceptBtn.ready{opacity:1;pointer-events:auto}
 #discAcceptBtn.ready:hover{background:#254d7a}
 
-/* HEADER */
+/* ══ HEADER ══ */
 header{background:var(--p);color:#fff;padding:0 14px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .logo{display:flex;align-items:center;gap:9px}
 .logo-icon{width:32px;height:32px;background:var(--a);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:16px}
@@ -53,7 +61,8 @@ header{background:var(--p);color:#fff;padding:0 14px;height:52px;display:flex;al
 .hbadge{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:2px 7px;font-size:9px}
 .offline-btn{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);border-radius:20px;padding:3px 10px;color:#fff;font-size:10px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
 .odot{width:7px;height:7px;border-radius:50%;background:#4caf50}
-/* LAYOUT */
+
+/* ══ LAYOUT ══ */
 main{flex:1;display:flex;overflow:hidden}
 aside{width:188px;background:var(--card);border-right:1px solid var(--b);display:flex;flex-direction:column;padding:8px 7px;gap:2px;flex-shrink:0;overflow-y:auto}
 aside::-webkit-scrollbar{width:3px}aside::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
@@ -64,7 +73,8 @@ aside::-webkit-scrollbar{width:3px}aside::-webkit-scrollbar-thumb{background:#cc
 .sitem:hover{background:var(--bg);border-color:var(--b)}
 .sitem.active{background:#eaf0f8;border-color:#b8ccde;color:var(--p);font-weight:600}
 .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-/* CONTENT */
+
+/* ══ CONTENT ══ */
 .content{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 .topbar{display:flex;border-bottom:2px solid var(--b);background:var(--card);flex-shrink:0;overflow-x:auto}
 .topbar::-webkit-scrollbar{height:2px}.topbar::-webkit-scrollbar-thumb{background:#ccc}
@@ -72,7 +82,11 @@ aside::-webkit-scrollbar{width:3px}aside::-webkit-scrollbar-thumb{background:#cc
 .ttab.active{color:var(--p);border-bottom-color:var(--p)}
 .view{flex:1;display:none;flex-direction:column;overflow:hidden}
 .view.show{display:flex}
-/* MESSAGES */
+
+/* ══ CHAT ══ */
+.chat-toolbar{display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:6px 16px;background:var(--card);border-bottom:1px solid var(--b);flex-shrink:0}
+.save-chat-btn{display:flex;align-items:center;gap:5px;background:none;border:1px solid var(--b);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;color:var(--m);cursor:pointer;transition:all .2s}
+.save-chat-btn:hover{border-color:var(--p);color:var(--p)}
 .msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
 .msgs::-webkit-scrollbar{width:4px}.msgs::-webkit-scrollbar-thumb{background:#ccc;border-radius:2px}
 .welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
@@ -90,8 +104,6 @@ aside::-webkit-scrollbar{width:3px}aside::-webkit-scrollbar-thumb{background:#cc
 .bubble{padding:10px 14px;border-radius:13px;font-size:12px;line-height:1.65;max-width:560px}
 .msg.user .bubble{background:var(--p);color:#fff;border-bottom-right-radius:4px}
 .msg.bot .bubble{background:var(--card);border:1px solid var(--b);border-bottom-left-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
-.stag{display:inline-block;border-radius:4px;font-size:10px;font-weight:600;padding:1px 5px;margin:2px 2px 0 0}
-.stag.art{background:#fef3cd;color:#856404}.stag.ctr{background:#fde8e8;color:#922b21}.stag.rol{background:#eaf0f8;color:var(--p)}.stag.tc{background:#e8daef;color:#6c3483}
 .typing{display:flex;gap:4px;align-items:center;padding:10px 14px}
 .typing span{width:6px;height:6px;border-radius:50%;background:#b0bec5;animation:bounce 1.2s infinite}
 .typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
@@ -104,7 +116,8 @@ textarea::placeholder{color:var(--m)}
 .sbtn{width:30px;height:30px;border-radius:7px;background:var(--p);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
 .sbtn:hover{background:#254d7a}.sbtn:disabled{background:#ccc;cursor:not-allowed}
 .hint{font-size:9px;color:var(--m);text-align:center;margin-top:5px}
-/* SHARED PANEL STYLES */
+
+/* ══ PANELES ══ */
 .panel-header{padding:11px 16px;background:var(--card);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
 .panel-header h2{font-size:13px;font-weight:700;color:var(--p)}
 .panel-header p{font-size:10px;color:var(--m)}
@@ -117,7 +130,6 @@ textarea::placeholder{color:var(--m)}
 .nbtn span{display:block;font-size:9px;font-weight:400;opacity:.7;margin-top:1px}
 .nbtn:hover{background:#eaf0f8;color:var(--p)}.nbtn.active{background:var(--p);color:#fff}
 .main-col{flex:1;overflow-y:auto;padding:16px}
-.main-col::-webkit-scrollbar{width:4px}.main-col::-webkit-scrollbar-thumb{background:#ccc}
 .ley-title{font-size:14px;font-weight:700;color:var(--p);margin-bottom:3px}
 .ley-sub{font-size:11px;color:var(--m);margin-bottom:14px}
 .tit-title{font-size:12px;font-weight:700;color:var(--t);margin:14px 0 7px;padding-bottom:5px;border-bottom:2px solid var(--a)}
@@ -127,18 +139,29 @@ textarea::placeholder{color:var(--m)}
 .art-text{font-size:12px;line-height:1.6;color:var(--t)}
 .consult-btn{font-size:10px;color:var(--p);background:#eaf0f8;border:none;border-radius:4px;padding:3px 8px;cursor:pointer;margin-top:6px;font-weight:600}
 .consult-btn:hover{background:#d0e3f3}
-/* CALCULADORA */
+
+/* ══ CONTRALORÍA ══ */
+.ctr-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:16px;overflow-y:auto}
+.ctr-card{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:13px 14px;transition:all .15s}
+.ctr-card:hover{box-shadow:0 3px 10px rgba(0,0,0,.08);border-color:#e8b4b4}
+.ctr-num{font-size:10px;font-weight:700;color:var(--a);margin-bottom:3px}
+.ctr-mat{font-size:12px;font-weight:600;color:var(--p);margin-bottom:5px;line-height:1.3}
+.ctr-res{font-size:11px;color:var(--m);line-height:1.5}
+.ctr-tags{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
+.ctag{background:#fde8e8;color:#922b21;border-radius:4px;font-size:9px;font-weight:600;padding:2px 5px}
+
+/* ══ CALCULADORA ══ */
 .two-col{flex:1;overflow-y:auto;padding:16px;display:flex;gap:14px}
-.form-card{background:var(--card);border:1px solid var(--b);border-radius:11px;padding:16px;flex:1;max-width:400px}
+.form-card{background:var(--card);border:1px solid var(--b);border-radius:11px;padding:16px;flex:1;max-width:420px}
 .form-card h3{font-size:13px;font-weight:700;color:var(--p);margin-bottom:3px}
-.form-card > p{font-size:11px;color:var(--m);margin-bottom:14px}
+.form-card>p{font-size:11px;color:var(--m);margin-bottom:14px}
 .result-card{background:var(--card);border:1px solid var(--b);border-radius:11px;padding:16px;flex:1}
 .result-card h3{font-size:13px;font-weight:700;color:var(--p);margin-bottom:12px}
 .fgroup{margin-bottom:11px}
 .fgroup label{display:block;font-size:11px;font-weight:600;color:var(--t);margin-bottom:4px}
-.fgroup input,.fgroup select{width:100%;padding:7px 10px;border:1px solid var(--b);border-radius:7px;font-size:12px;color:var(--t);background:var(--bg);outline:none;transition:border-color .2s;font-family:inherit}
-.fgroup input:focus,.fgroup select:focus{border-color:var(--p)}
-/* ?? ERROR STYLES para Mejora 1 ?? */
+.fgroup input,.fgroup select,.fgroup textarea{width:100%;padding:7px 10px;border:1px solid var(--b);border-radius:7px;font-size:12px;color:var(--t);background:var(--bg);outline:none;transition:border-color .2s;font-family:inherit}
+.fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{border-color:var(--p)}
+.fgroup textarea{resize:vertical;min-height:65px}
 .fgroup input.input-error{border-color:var(--a);background:#fff5f5}
 .field-error{font-size:10px;color:var(--a);margin-top:3px;display:none}
 .field-error.show{display:block}
@@ -151,20 +174,17 @@ textarea::placeholder{color:var(--m)}
 .res-total{background:#eaf0f8;border-radius:8px;padding:12px;margin-top:10px;text-align:center}
 .res-total .amount{font-size:20px;font-weight:700;color:var(--p)}
 .res-total p{font-size:10px;color:var(--m);margin-top:2px}
+.res-tope{background:#fff3cd;border:1px solid #ffc107;border-radius:6px;padding:6px 10px;font-size:10px;color:#856404;margin-top:6px}
 .art-ref{font-size:10px;color:var(--m);background:var(--bg);border-radius:5px;padding:5px 9px;margin-top:8px;line-height:1.5}
-.empty-box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;color:var(--m);font-size:12px;gap:8px;text-align:center}
-/* disclaimer banner en calc */
 .calc-disclaimer{background:#fff3cd;border:1px solid #ffc107;border-radius:7px;padding:8px 12px;font-size:10px;color:#856404;margin-top:10px;line-height:1.5}
-/* CTRALOR�A */
-.ctr-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:16px;overflow-y:auto}
-.ctr-card{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:13px 14px;transition:all .15s}
-.ctr-card:hover{box-shadow:0 3px 10px rgba(0,0,0,.08);border-color:#e8b4b4}
-.ctr-num{font-size:10px;font-weight:700;color:var(--a);margin-bottom:3px}
-.ctr-mat{font-size:12px;font-weight:600;color:var(--p);margin-bottom:5px;line-height:1.3}
-.ctr-res{font-size:11px;color:var(--m);line-height:1.5}
-.ctr-tags{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
-.ctag{background:#fde8e8;color:#922b21;border-radius:4px;font-size:9px;font-weight:600;padding:2px 5px}
-/* ALERTAS */
+.empty-box{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;color:var(--m);font-size:12px;gap:8px;text-align:center}
+.dl-btn-row{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+.dl-btn{background:#eaf0f8;color:var(--p);border:1px solid #b8ccde;border-radius:6px;padding:6px 12px;font-size:10px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px}
+.dl-btn:hover{background:#d0e3f3}
+.dl-btn.word{background:#e8f4fd;color:#2b579a;border-color:#b8d4ed}
+.dl-btn.word:hover{background:#cce4f7}
+
+/* ══ ALERTAS ══ */
 .alertas-list{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 .alerta-card{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px}
 .alerta-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:7px}
@@ -182,27 +202,21 @@ textarea::placeholder{color:var(--m)}
 .prefs-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px}
 .pchip{padding:5px 11px;border-radius:20px;border:2px solid var(--b);background:var(--card);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--t)}
 .pchip.sel{background:var(--p);color:#fff;border-color:var(--p)}
-/* TRIBUNAL */
-.trib-wrap{flex:1;display:flex;gap:12px;padding:14px;overflow-y:auto}
-.trib-form{width:320px;flex-shrink:0;background:var(--card);border:1px solid var(--b);border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:10px}
-.trib-form h3{font-size:13px;font-weight:700;color:var(--purple)}
-.trib-form > p{font-size:11px;color:var(--m);margin-top:-6px}
-.trib-result{flex:1;background:var(--card);border:1px solid var(--b);border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:8px;overflow:hidden}
-.trib-result h3{font-size:12px;font-weight:700;color:var(--purple);flex-shrink:0}
-.trib-output{flex:1;overflow-y:auto;font-size:12px;line-height:1.7}
-/* SUBTABS */
-.subtab-bar{display:flex;gap:6px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--b);flex-shrink:0}
+
+/* ══ SUBTABS ══ */
+.subtab-bar{display:flex;gap:6px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--b);flex-shrink:0;flex-wrap:wrap}
 .stab{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--b);color:var(--m);background:var(--bg);transition:all .15s}
 .stab.active{background:var(--p);color:#fff;border-color:var(--p)}
-/* ESCRITOS */
-.escritos-wrap{flex:1;overflow-y:auto;padding:14px;display:flex;gap:12px}
-.escrito-types{width:185px;flex-shrink:0;display:flex;flex-direction:column;gap:5px}
-.etype-card{background:var(--card);border:1px solid var(--b);border-radius:8px;padding:10px;cursor:pointer;transition:all .15s}
-.etype-card:hover,.etype-card.active{border-color:var(--p);background:#eaf0f8}
-.etype-card.active{border-width:2px}
-.etype-icon{font-size:19px;margin-bottom:4px}
-.etype-name{font-size:11px;font-weight:600;color:var(--p)}
-.etype-desc{font-size:10px;color:var(--m);margin-top:2px;line-height:1.3}
+
+/* ══ ESCRITOS / RECLAMOS ══ */
+.escritos-wrap,.reclamos-wrap{flex:1;overflow-y:auto;padding:14px;display:flex;gap:12px}
+.escrito-types,.reclamo-nav{width:185px;flex-shrink:0;display:flex;flex-direction:column;gap:5px;overflow-y:auto}
+.etype-card,.reclamo-card{background:var(--card);border:1px solid var(--b);border-radius:8px;padding:10px;cursor:pointer;transition:all .15s}
+.etype-card:hover,.etype-card.active,.reclamo-card:hover,.reclamo-card.active{border-color:var(--p);background:#eaf0f8}
+.etype-card.active,.reclamo-card.active{border-width:2px}
+.etype-icon,.reclamo-icon{font-size:19px;margin-bottom:4px}
+.etype-name,.reclamo-name{font-size:11px;font-weight:600;color:var(--p)}
+.etype-desc,.reclamo-dest{font-size:10px;color:var(--m);margin-top:2px;line-height:1.3}
 .escrito-form{flex:1;background:var(--card);border:1px solid var(--b);border-radius:11px;padding:14px;display:flex;flex-direction:column;gap:9px;overflow-y:auto}
 .escrito-form h3{font-size:13px;font-weight:700;color:var(--p)}
 .efield{display:flex;flex-direction:column;gap:3px}
@@ -215,171 +229,188 @@ textarea::placeholder{color:var(--m)}
 .escrito-output{flex:1;background:var(--card);border:1px solid var(--b);border-radius:11px;padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0;overflow:hidden}
 .escrito-output h3{font-size:12px;font-weight:700;color:var(--p);flex-shrink:0}
 .output-area{flex:1;overflow-y:auto;font-size:11px;line-height:1.7;color:var(--t);white-space:pre-wrap;background:var(--bg);border-radius:7px;padding:12px;font-family:'Courier New',monospace}
+.output-area::-webkit-scrollbar{width:4px}.output-area::-webkit-scrollbar-thumb{background:#ccc}
 .copy-btn{background:#eaf0f8;color:var(--p);border:none;border-radius:6px;padding:6px 12px;font-size:10px;font-weight:600;cursor:pointer;align-self:flex-start;flex-shrink:0}
 .copy-btn:hover{background:#d0e3f3}
-/* RECLAMOS */
-.reclamos-wrap{flex:1;overflow-y:auto;padding:14px;display:flex;gap:12px}
-.reclamo-nav{width:185px;flex-shrink:0;display:flex;flex-direction:column;gap:5px}
-.reclamo-card{background:var(--card);border:1px solid var(--b);border-radius:8px;padding:10px;cursor:pointer;transition:all .15s}
-.reclamo-card:hover,.reclamo-card.active{border-color:var(--p);background:#eaf0f8}
-.reclamo-card.active{border-width:2px}
-.reclamo-icon{font-size:20px;margin-bottom:4px}
-.reclamo-name{font-size:11px;font-weight:600;color:var(--p)}
-.reclamo-dest{font-size:10px;color:var(--m);margin-top:2px}
-/* CORTES */
+
+/* ══ TRIBUNAL / SUMARIOS ══ */
+.trib-wrap{flex:1;display:flex;gap:12px;padding:14px;overflow-y:auto}
+.trib-form{width:320px;flex-shrink:0;background:var(--card);border:1px solid var(--b);border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.trib-form h3{font-size:13px;font-weight:700}
+.trib-form>p{font-size:11px;color:var(--m);margin-top:-6px}
+.trib-result{flex:1;background:var(--card);border:1px solid var(--b);border-radius:11px;padding:16px;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.trib-result h3{font-size:12px;font-weight:700;flex-shrink:0}
+.trib-output{flex:1;overflow-y:auto;font-size:12px;line-height:1.7}
+.trib-output::-webkit-scrollbar{width:4px}.trib-output::-webkit-scrollbar-thumb{background:#ccc}
+
+/* ══ CORTES ══ */
 .cortes-wrap{flex:1;display:flex;gap:12px;padding:14px;overflow-y:auto}
 .cortes-left{width:270px;flex-shrink:0;display:flex;flex-direction:column;gap:10px}
 .cortes-right{flex:1;background:var(--card);border:1px solid var(--b);border-radius:11px;padding:14px;display:flex;flex-direction:column;gap:8px;overflow:hidden}
 .cortes-right h3{font-size:12px;font-weight:700;color:var(--p);flex-shrink:0}
 .cortes-output{flex:1;overflow-y:auto;font-size:12px;line-height:1.7}
-.corte-selector{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px}
-.corte-selector h4{font-size:12px;font-weight:700;color:var(--p);margin-bottom:8px}
+.corte-selector,.materia-selector{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px}
+.corte-selector h4,.materia-selector h4{font-size:12px;font-weight:700;color:var(--p);margin-bottom:8px}
 .corte-btns{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .corte-btn{padding:6px 8px;border-radius:6px;border:1px solid var(--b);background:var(--bg);font-size:10px;cursor:pointer;text-align:center;transition:all .15s;color:var(--t);font-weight:500}
 .corte-btn:hover{border-color:var(--p);color:var(--p)}.corte-btn.active{background:var(--p);color:#fff;border-color:var(--p)}
-.materia-selector{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:14px}
-.materia-selector h4{font-size:12px;font-weight:700;color:var(--p);margin-bottom:8px}
+
+/* ══ MISC ══ */
 .spinner{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-mark{background:#fff3cd;padding:0 2px;border-radius:2px}
 .no-res{text-align:center;color:var(--m);padding:24px;font-size:12px}
-.fgroup textarea{width:100%;padding:7px 10px;border:1px solid var(--b);border-radius:7px;font-size:12px;color:var(--t);background:var(--bg);outline:none;transition:border-color .2s;font-family:inherit;resize:vertical}
-.fgroup textarea:focus{border-color:var(--p)}
+
+/* ══ RESPONSIVE MÓVIL ══ */
+@media (max-width:768px){
+  main{flex-direction:column}
+  aside{width:100%;max-height:80px;flex-direction:row;overflow-x:auto;overflow-y:hidden;border-right:none;border-bottom:1px solid var(--b);padding:6px 8px;gap:5px;align-items:center;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+  aside::-webkit-scrollbar{display:none}
+  .new-btn{white-space:nowrap;flex-shrink:0;width:auto;padding:6px 10px;font-size:10px}
+  .sitem{white-space:nowrap;flex-shrink:0;padding:5px 10px;font-size:10px;scroll-snap-align:start}
+  .slabel{display:none}
+  [data-qk]{display:none}
+  .msg{max-width:95%}
+  header{padding:0 10px;height:48px}
+  .hbadges{display:none}
+  .logo h1{font-size:12px}
+  .topbar{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .topbar::-webkit-scrollbar{display:none}
+  .ttab{font-size:10px;padding:8px 9px}
+  .two-col{flex-direction:column;padding:10px;gap:10px}
+  .form-card,.result-card{max-width:100%}
+  .trib-wrap{flex-direction:column;padding:10px;gap:10px}
+  .trib-form{width:100%}
+  .escritos-wrap,.reclamos-wrap{flex-direction:column;padding:10px;gap:10px}
+  .escrito-types,.reclamo-nav{width:100%;flex-direction:row;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:6px}
+  .etype-card,.reclamo-card{flex-shrink:0;width:130px}
+  .ctr-grid{grid-template-columns:1fr;padding:10px}
+  .cortes-wrap{flex-direction:column;padding:10px}
+  .cortes-left{width:100%}
+  .corte-btns{grid-template-columns:repeat(3,1fr)}
+  #disclaimerBox{max-width:100%;border-radius:10px}
+  .disc-body{max-height:60vh;padding:14px}
+  .disc-footer{flex-direction:column;gap:8px;align-items:stretch}
+  #discAcceptBtn{width:100%;text-align:center}
+  .inp-area{padding:8px 10px 10px}
+  .msgs{padding:10px}
+  .dl-btn-row{flex-direction:column}
+}
 </style>
 </head>
 <body>
 
-<!-- ??????????????????????????????????????????
-     MEJORA 2: MODAL DISCLAIMER
-     Aparece al primer uso de la sesi�n.
-     El bot�n "Aceptar" solo se habilita al
-     marcar el checkbox de confirmaci�n.
-     ?????????????????????????????????????????? -->
+<!-- ══ DISCLAIMER ══ -->
 <div id="disclaimerOverlay">
   <div id="disclaimerBox">
     <div class="disc-header">
-      <div class="disc-icon">??</div>
-      <div>
-        <h2>T�rminos de Uso y Exenci�n de Responsabilidad Legal</h2>
-        <p>Plataforma jur�dica laboral � Aviso legal obligatorio</p>
-      </div>
+      <div class="disc-icon">⚖️</div>
+      <div><h2>Términos de Uso y Exención de Responsabilidad Legal</h2><p>Lea atentamente antes de continuar</p></div>
     </div>
     <div class="disc-body">
       <div class="disc-section">
-        <h3>?? Declaraci�n de Naturaleza Referencial</h3>
-        <p>Jurisbot es una herramienta tecnol�gica dise�ada <strong>exclusivamente con fines informativos y de simulaci�n referencial</strong>. Los resultados, c�lculos de indemnizaciones y datos proporcionados por esta aplicaci�n <strong>no constituyen, bajo ninguna circunstancia, asesor�a legal, laboral, judicial o profesional vinculante</strong>. Para la toma de decisiones definitivas o la resoluci�n de controversias, el usuario debe consultar a un abogado habilitado para el ejercicio de la profesi�n.</p>
+        <h3>📌 Declaración de Naturaleza Referencial</h3>
+        <p>Jurisbot es una herramienta tecnológica diseñada <strong>exclusivamente con fines informativos y de simulación referencial</strong>. Los resultados, cálculos de indemnizaciones y datos proporcionados <strong>no constituyen, bajo ninguna circunstancia, asesoría legal, laboral, judicial o profesional vinculante</strong>. Para decisiones definitivas consulte a un abogado habilitado.</p>
       </div>
-
       <div class="disc-section">
-        <h3>?? Exenci�n de Responsabilidad y Renuncia de Acciones Legales</h3>
-        <p style="margin-bottom:10px">Al presionar el bot�n <strong>"Aceptar y Continuar"</strong>, el usuario declara entender y consentir expresamente lo siguiente:</p>
-
-        <div style="background:#fff8f8;border:1px solid #f5c6c6;border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;gap:10px">
-            <span style="font-weight:700;color:var(--a);flex-shrink:0">1.</span>
-            <div><strong style="color:var(--t)">L�mite de la Herramienta:</strong> Los c�lculos generados son estimaciones automatizadas basadas estrictamente en los datos ingresados por el usuario y <strong>no garantizan precisi�n absoluta</strong> ante eventuales cambios legislativos, interpretaciones jurisprudenciales o particularidades de cada caso concreto.</div>
-          </div>
-          <div style="display:flex;gap:10px">
-            <span style="font-weight:700;color:var(--a);flex-shrink:0">2.</span>
-            <div><strong style="color:var(--t)">Liberaci�n de Responsabilidad:</strong> El usuario asume a su entero riesgo el uso de la informaci�n obtenida en esta aplicaci�n. Los creadores, desarrolladores y administradores de Jurisbot quedan <strong>exentos de cualquier responsabilidad civil, penal o administrativa</strong> por eventuales errores, omisiones o inexactitudes en los resultados.</div>
-          </div>
-          <div style="display:flex;gap:10px">
-            <span style="font-weight:700;color:var(--a);flex-shrink:0">3.</span>
-            <div><strong style="color:var(--t)">Renuncia Expresa:</strong> El usuario <strong>renuncia de manera irrevocable</strong> a iniciar cualquier tipo de acci�n legal, demanda, querella o reclamaci�n (judicial o extrajudicial) en contra de los creadores y titulares de Jurisbot por eventuales da�os directos, indirectos, perjuicios o lucro cesante que pudieran derivarse de la interpretaci�n, uso o decisiones tomadas con base en el contenido de esta aplicaci�n.</div>
-          </div>
+        <h3>⚖️ Exención de Responsabilidad y Renuncia de Acciones Legales</h3>
+        <p style="margin-bottom:10px">Al presionar <strong>"Aceptar y Continuar"</strong>, usted declara entender y consentir expresamente:</p>
+        <div class="disc-numeral">
+          <div class="disc-numeral-row"><span class="disc-n">1.</span><div><strong>Límite de la Herramienta:</strong> Los cálculos son estimaciones automatizadas que <strong>no garantizan precisión absoluta</strong> ante cambios legislativos, interpretaciones jurisprudenciales o particularidades de cada caso.</div></div>
+          <div class="disc-numeral-row"><span class="disc-n">2.</span><div><strong>Liberación de Responsabilidad:</strong> El usuario asume a su entero riesgo el uso de la información. Los creadores, desarrolladores y administradores de Jurisbot quedan <strong>exentos de toda responsabilidad civil, penal o administrativa</strong> por errores, omisiones o inexactitudes.</div></div>
+          <div class="disc-numeral-row"><span class="disc-n">3.</span><div><strong>Renuncia Expresa:</strong> El usuario <strong>renuncia irrevocablemente</strong> a iniciar cualquier acción legal, demanda, querella o reclamación contra los creadores y titulares de Jurisbot por daños directos, indirectos, perjuicios o lucro cesante derivados del uso de esta aplicación.</div></div>
         </div>
       </div>
-
       <div class="disc-check">
         <input type="checkbox" id="discCheck" onchange="toggleDiscCheck(this.checked)">
-        <label for="discCheck">Acepto los T�rminos de Uso y la Exenci�n de Responsabilidad Legal.</label>
+        <label for="discCheck">Acepto los Términos de Uso y la Exención de Responsabilidad Legal.</label>
       </div>
     </div>
     <div class="disc-footer">
       <p>Debe marcar la casilla para poder continuar.</p>
-      <button id="discAcceptBtn" onclick="acceptDisclaimer()">? Aceptar y Continuar</button>
+      <button id="discAcceptBtn" onclick="acceptDisclaimer()">✅ Aceptar y Continuar</button>
     </div>
   </div>
 </div>
 
 <header>
   <div class="logo">
-    <div class="logo-icon">??</div>
-    <div><h1>JurisBot Laboral Chile</h1><p>Plataforma jur�dica laboral integral</p></div>
+    <div class="logo-icon">⚖️</div>
+    <div><h1>JurisBot Laboral Chile</h1><p>Plataforma jurídica laboral integral</p></div>
   </div>
   <div class="hright">
     <div class="hbadges">
-      <span class="hbadge">?? CT</span><span class="hbadge">??? 16.744</span><span class="hbadge">?? 20.940</span>
-      <span class="hbadge">??? PJUD</span><span class="hbadge">?? CGR</span><span class="hbadge">?? SUSESO</span>
+      <span class="hbadge">📖 CT</span><span class="hbadge">🛡️ 16.744</span><span class="hbadge">🤝 20.940</span>
+      <span class="hbadge">🏛️ PJUD</span><span class="hbadge">🔴 CGR</span><span class="hbadge">🏥 SUSESO</span>
     </div>
-    <button class="offline-btn" id="offlineToggle">
-      <span class="odot" id="odot"></span><span id="olabel">Online</span>
-    </button>
+    <button class="offline-btn" id="offlineToggle"><span class="odot" id="odot"></span><span id="olabel">Online</span></button>
   </div>
 </header>
 
 <main>
 <aside>
-  <button class="new-btn" id="btnNewChat">?? Nueva consulta</button>
-  <div class="slabel">M�dulos</div>
-  <div class="sitem active" id="sb0" data-view="chat" data-vi="0">?? Chat jur�dico</div>
-  <div class="sitem" id="sb1" data-view="norm" data-vi="1">?? Normativa</div>
-  <div class="sitem" id="sb2" data-view="ctr" data-vi="2">?? Contralor�a</div>
-  <div class="sitem" id="sb3" data-view="calc" data-vi="3">?? Calculadora</div>
-  <div class="sitem" id="sb4" data-view="caso" data-vi="4">?? An�lisis de caso</div>
-  <div class="sitem" id="sb5" data-view="escritos" data-vi="5">?? Escritos</div>
-  <div class="sitem" id="sb6" data-view="alertas" data-vi="6">?? Alertas</div>
-  <div class="sitem" id="sb7" data-view="sumarios" data-vi="7">??? Sumarios / Licencias</div>
-  <div class="sitem" id="sb8" data-view="tribunal" data-vi="8">?? Vista Tribunal</div>
-  <div class="sitem" id="sb9" data-view="cortes" data-vi="9">??? Criterios por Corte</div>
-  <div class="sitem" id="sb10" data-view="reclamos" data-vi="10">?? Reclamos</div>
+  <button class="new-btn" id="btnNewChat">✏️ Nueva consulta</button>
+  <div class="slabel">Módulos</div>
+  <div class="sitem active" id="sb0" data-view="chat" data-vi="0">💬 Chat jurídico</div>
+  <div class="sitem" id="sb1" data-view="norm" data-vi="1">📖 Normativa</div>
+  <div class="sitem" id="sb2" data-view="ctr" data-vi="2">🔴 Contraloría</div>
+  <div class="sitem" id="sb3" data-view="calc" data-vi="3">🧮 Calculadora</div>
+  <div class="sitem" id="sb4" data-view="caso" data-vi="4">🔍 Análisis caso</div>
+  <div class="sitem" id="sb5" data-view="escritos" data-vi="5">✍️ Escritos</div>
+  <div class="sitem" id="sb6" data-view="alertas" data-vi="6">🔔 Alertas</div>
+  <div class="sitem" id="sb7" data-view="sumarios" data-vi="7">🗂️ Sumarios/Lic.</div>
+  <div class="sitem" id="sb8" data-view="tribunal" data-vi="8">⚖️ Vista Tribunal</div>
+  <div class="sitem" id="sb9" data-view="cortes" data-vi="9">🗺️ Criterios Corte</div>
+  <div class="sitem" id="sb10" data-view="reclamos" data-vi="10">📨 Reclamos</div>
   <div class="slabel">Filtro fuente</div>
   <div class="sitem active" id="f0" data-filter="all" data-fi="0"><span class="dot" style="background:var(--a)"></span>Todas</div>
   <div class="sitem" id="f1" data-filter="pjud" data-fi="1"><span class="dot" style="background:#2980b9"></span>Poder Judicial</div>
   <div class="sitem" id="f2" data-filter="dt" data-fi="2"><span class="dot" style="background:var(--g)"></span>Dir. del Trabajo</div>
   <div class="sitem" id="f3" data-filter="tc" data-fi="3"><span class="dot" style="background:#8e44ad"></span>T. Constitucional</div>
-  <div class="sitem" id="f4" data-filter="ctr" data-fi="4"><span class="dot" style="background:var(--a)"></span>Contralor�a</div>
-  <div class="slabel">Accesos r�pidos</div>
-  <div class="sitem" data-qk="despido">?? Despido injustificado</div>
-  <div class="sitem" data-qk="acoso">?? Acoso laboral</div>
-  <div class="sitem" data-qk="tutela">?? Tutela laboral</div>
-  <div class="sitem" data-qk="accidente">?? Accidentes trabajo</div>
-  <div class="sitem" data-qk="huelga">?? Negociaci�n colectiva</div>
-  <div class="sitem" data-qk="honorarios">?? Honorarios p�blicos</div>
+  <div class="sitem" id="f4" data-filter="ctr" data-fi="4"><span class="dot" style="background:var(--a)"></span>Contraloría</div>
+  <div class="slabel">Accesos rápidos</div>
+  <div class="sitem" data-qk="despido">📌 Despido injustificado</div>
+  <div class="sitem" data-qk="acoso">📌 Acoso laboral</div>
+  <div class="sitem" data-qk="tutela">📌 Tutela laboral</div>
+  <div class="sitem" data-qk="accidente">📌 Accidentes trabajo</div>
+  <div class="sitem" data-qk="huelga">📌 Negociación colectiva</div>
+  <div class="sitem" data-qk="honorarios">📌 Honorarios públicos</div>
 </aside>
 
 <div class="content">
   <div class="topbar">
-    <div class="ttab active" id="tt0" data-view="chat" data-vi="0">?? Chat</div>
-    <div class="ttab" id="tt1" data-view="norm" data-vi="1">?? Normativa</div>
-    <div class="ttab" id="tt2" data-view="ctr" data-vi="2">?? CGR</div>
-    <div class="ttab" id="tt3" data-view="calc" data-vi="3">?? Calc.</div>
-    <div class="ttab" id="tt4" data-view="caso" data-vi="4">?? Caso</div>
-    <div class="ttab" id="tt5" data-view="escritos" data-vi="5">?? Escritos</div>
-    <div class="ttab" id="tt6" data-view="alertas" data-vi="6">?? Alertas</div>
-    <div class="ttab" id="tt7" data-view="sumarios" data-vi="7">??? Sumarios</div>
-    <div class="ttab" id="tt8" data-view="tribunal" data-vi="8">?? Tribunal</div>
-    <div class="ttab" id="tt9" data-view="cortes" data-vi="9">??? Cortes</div>
-    <div class="ttab" id="tt10" data-view="reclamos" data-vi="10">?? Reclamos</div>
+    <div class="ttab active" id="tt0" data-view="chat" data-vi="0">💬 Chat</div>
+    <div class="ttab" id="tt1" data-view="norm" data-vi="1">📖 Normativa</div>
+    <div class="ttab" id="tt2" data-view="ctr" data-vi="2">🔴 CGR</div>
+    <div class="ttab" id="tt3" data-view="calc" data-vi="3">🧮 Calc.</div>
+    <div class="ttab" id="tt4" data-view="caso" data-vi="4">🔍 Caso</div>
+    <div class="ttab" id="tt5" data-view="escritos" data-vi="5">✍️ Escritos</div>
+    <div class="ttab" id="tt6" data-view="alertas" data-vi="6">🔔 Alertas</div>
+    <div class="ttab" id="tt7" data-view="sumarios" data-vi="7">🗂️ Sumarios</div>
+    <div class="ttab" id="tt8" data-view="tribunal" data-vi="8">⚖️ Tribunal</div>
+    <div class="ttab" id="tt9" data-view="cortes" data-vi="9">🗺️ Cortes</div>
+    <div class="ttab" id="tt10" data-view="reclamos" data-vi="10">📨 Reclamos</div>
   </div>
 
-  <!-- ?? CHAT ?? -->
+  <!-- CHAT -->
   <div class="view show" id="vChat">
-    <div class="msgs" id="msgs"><div id="welcome"></div></div>
+    <div class="chat-toolbar">
+      <button class="save-chat-btn" id="saveChatBtn">📥 Guardar Chat</button>
+    </div>
+    <div class="msgs" id="msgs"></div>
     <div class="inp-area">
       <div class="inp-wrap">
         <textarea id="inp" rows="1" placeholder="Consulta sobre normativa o jurisprudencia laboral chilena..."></textarea>
-        <button class="sbtn" id="sndBtn">?</button>
+        <button class="sbtn" id="sndBtn">➤</button>
       </div>
-      <p class="hint">Verifique siempre en pjud.cl � dt.gob.cl � tribunalconstitucional.cl � contraloria.cl</p>
+      <p class="hint">Verifique siempre en pjud.cl · dt.gob.cl · contraloria.cl</p>
     </div>
   </div>
 
-  <!-- ?? NORMATIVA ?? -->
+  <!-- NORMATIVA -->
   <div class="view" id="vNorm">
     <div class="panel-header">
-      <div><h2>?? Normativa Laboral Chilena</h2><p>CT � Ley 16.744 � Ley 20.940 � Estatuto Adm.</p></div>
-      <div class="search-box"><span style="color:var(--m)">??</span><input type="text" id="normSearch" placeholder="Buscar art�culo o materia..."></div>
+      <div><h2>📖 Normativa Laboral Chilena</h2><p>CT · Ley 16.744 · Ley 20.940 · Estatuto Adm.</p></div>
+      <div class="search-box"><span style="color:var(--m)">🔍</span><input type="text" id="normSearch" placeholder="Buscar artículo o materia..."></div>
     </div>
     <div class="panel-body">
       <div class="nav-col" id="normNav"></div>
@@ -387,30 +418,22 @@ mark{background:#fff3cd;padding:0 2px;border-radius:2px}
     </div>
   </div>
 
-  <!-- ?? CONTRALOR�A ?? -->
+  <!-- CONTRALORÍA -->
   <div class="view" id="vCtr">
     <div class="panel-header">
-      <div><h2>?? Dict�menes de Contralor�a</h2><p>Materia laboral y funci�n p�blica</p></div>
-      <div class="search-box"><span style="color:var(--m)">??</span><input type="text" id="ctrSearch" placeholder="Buscar dictamen..."></div>
+      <div><h2>🔴 Dictámenes de Contraloría</h2><p>Materia laboral y función pública</p></div>
+      <div class="search-box"><span style="color:var(--m)">🔍</span><input type="text" id="ctrSearch" placeholder="Buscar dictamen..."></div>
     </div>
     <div class="ctr-grid" id="ctrGrid"></div>
   </div>
 
-  <!-- ??????????????????????????????????????????
-       MEJORA 1: CALCULADORA REFACTORIZADA
-       - Validaci�n campo a campo con mensajes de error
-       - L�gica modular separada
-       - Muestra disclaimer al entregar resultado
-       - MEJORA 3: campos con persistencia de estado en memoria
-       ?????????????????????????????????????????? -->
+  <!-- CALCULADORA -->
   <div class="view" id="vCalc">
     <div class="two-col">
       <div class="form-card">
-        <h3>?? Calculadora de Indemnizaciones</h3>
-        <p>Arts. 162, 163 y 168 del C�digo del Trabajo</p>
-
-        <div class="fgroup">
-          <label>Tipo de t�rmino</label>
+        <h3>🧮 Calculadora de Indemnizaciones</h3>
+        <p>Arts. 162, 163 y 168 CT · Tope: 90 UF</p>
+        <div class="fgroup"><label>Tipo de término</label>
           <select id="cTipo">
             <option value="nec">Necesidades de la empresa (art. 161)</option>
             <option value="inj">Despido injustificado (art. 168 a) +30%</option>
@@ -418,114 +441,98 @@ mark{background:#fff3cd;padding:0 2px;border-radius:2px}
             <option value="ind">Autodespido (art. 171) +80%</option>
           </select>
         </div>
-
         <div class="fgroup">
-          <label>�ltima remuneraci�n mensual ($)</label>
-          <input type="text" id="cRem"
-            inputmode="numeric"
-            pattern="[0-9\.\,\$\s]*"
-            placeholder="ej: 1.500.000"
-            autocomplete="off"
-            maxlength="15">
-          <span class="field-error" id="errRem">Ingrese una remuneraci�n v�lida mayor a $0</span>
+          <label>Última remuneración mensual ($)</label>
+          <input type="text" id="cRem" inputmode="numeric" pattern="[0-9\.\,\$\s]*" placeholder="ej: 1.500.000" autocomplete="off" maxlength="15">
+          <span class="field-error" id="errRem">Ingrese una remuneración válida mayor a $0</span>
         </div>
-
-        <div class="fgroup">
-          <label>A�os de servicio</label>
+        <div class="fgroup"><label>Años de servicio</label>
           <input type="number" id="cAnios" placeholder="ej: 5" min="1" max="50">
-          <span class="field-error" id="errAnios">Ingrese entre 1 y 50 a�os de servicio</span>
+          <span class="field-error" id="errAnios">Ingrese entre 1 y 50 años</span>
         </div>
-
-        <div class="fgroup">
-          <label>Meses de fracci�n (0�11)</label>
+        <div class="fgroup"><label>Meses de fracción (0–11)</label>
           <input type="number" id="cMeses" placeholder="ej: 6" min="0" max="11" value="0">
           <span class="field-error" id="errMeses">Ingrese entre 0 y 11 meses</span>
         </div>
-
-        <div class="fgroup">
-          <label>Vacaciones proporcionales (d�as h�biles)</label>
+        <div class="fgroup"><label>Vacaciones proporcionales (días hábiles)</label>
           <input type="number" id="cVacProp" placeholder="ej: 8" min="0" max="25" value="0">
-          <span class="field-error" id="errVac">Ingrese entre 0 y 25 d�as</span>
+          <span class="field-error" id="errVac">Ingrese entre 0 y 25 días</span>
         </div>
-
-        <div class="fgroup">
-          <label>Aviso previo</label>
+        <div class="fgroup"><label>Valor UF actual ($)</label>
+          <input type="number" id="cUF" placeholder="ej: 38500" min="1">
+          <span style="font-size:10px;color:var(--m);margin-top:2px;display:block">Consulte el valor vigente en cmfchile.cl</span>
+        </div>
+        <div class="fgroup"><label>Aviso previo</label>
           <select id="cAviso">
-            <option value="no">No recibi� aviso � sustitutiva procede</option>
-            <option value="si">S� recibi� aviso (30 d�as)</option>
+            <option value="no">No recibió aviso — sustitutiva procede</option>
+            <option value="si">Sí recibió aviso (30 días)</option>
           </select>
         </div>
-
-        <button class="action-btn" id="calcBtn">Calcular indemnizaci�n</button>
+        <button class="action-btn" id="calcBtn">Calcular indemnización</button>
       </div>
-
       <div class="result-card">
-        <h3>?? Resultado estimado</h3>
-        <div id="calcOut">
-          <div class="empty-box"><span style="font-size:30px">??</span><span>Complete los datos para calcular</span></div>
-        </div>
+        <h3>📊 Resultado estimado</h3>
+        <div id="calcOut"><div class="empty-box"><span style="font-size:30px">🧮</span><span>Complete los datos para calcular</span></div></div>
       </div>
     </div>
   </div>
 
-  <!-- ?? AN�LISIS DE CASO (con persistencia Mejora 3) ?? -->
+  <!-- ANÁLISIS DE CASO -->
   <div class="view" id="vCaso">
     <div class="trib-wrap">
       <div class="trib-form">
-        <h3 style="color:var(--p)">?? An�lisis de Caso</h3>
-        <p style="color:var(--m);font-size:11px">Describa los hechos y obtenga orientaci�n jur�dica completa.</p>
+        <h3 style="color:var(--p)">🔍 Análisis de Caso</h3>
+        <p style="color:var(--m);font-size:11px">Describa los hechos y obtenga orientación jurídica completa.</p>
         <div class="fgroup"><label>Tipo de parte</label>
-          <select id="cParte"><option value="trabajador">Trabajador / Demandante</option><option value="empleador">Empleador / Demandado</option><option value="sindicato">Sindicato</option><option value="funcionario">Funcionario p�blico</option></select>
+          <select id="cParte"><option value="trabajador">Trabajador / Demandante</option><option value="empleador">Empleador / Demandado</option><option value="sindicato">Sindicato</option><option value="funcionario">Funcionario público</option></select>
         </div>
-        <div class="fgroup"><label>�rea del conflicto</label>
-          <select id="cArea">
-            <option>T�rmino de contrato / Despido</option><option>Acoso laboral o sexual</option>
-            <option>Tutela de derechos fundamentales</option><option>Accidente del trabajo / Ley 16.744</option>
-            <option>Remuneraciones / Horas extra</option><option>Conflicto sindical</option>
-            <option>Subcontrataci�n</option><option>Funci�n p�blica / Contralor�a</option><option>Otro</option>
-          </select>
+        <div class="fgroup"><label>Área del conflicto</label>
+          <select id="cArea"><option>Término de contrato / Despido</option><option>Acoso laboral o sexual</option><option>Tutela de derechos fundamentales</option><option>Accidente del trabajo / Ley 16.744</option><option>Remuneraciones / Horas extra</option><option>Conflicto sindical</option><option>Subcontratación</option><option>Función pública / Contraloría</option><option>Otro</option></select>
         </div>
-        <div class="fgroup"><label>Descripci�n de los hechos</label>
-          <textarea id="cHechos" rows="5" placeholder="Qu� ocurri�, fechas, partes, documentos..."></textarea>
+        <div class="fgroup"><label>Descripción de los hechos</label>
+          <textarea id="cHechos" rows="5" placeholder="Qué ocurrió, fechas, partes, documentos..."></textarea>
         </div>
         <div class="fgroup"><label>Objetivo (opcional)</label>
-          <input type="text" id="cObj" placeholder="ej: reincorporaci�n, indemnizaci�n...">
+          <input type="text" id="cObj" placeholder="ej: reincorporación, indemnización...">
         </div>
-        <button class="action-btn" id="casoBtn">?? Analizar caso</button>
+        <button class="action-btn" id="casoBtn">🔍 Analizar caso</button>
       </div>
       <div class="trib-result">
-        <h3 style="color:var(--p)">?? An�lisis jur�dico</h3>
-        <div class="trib-output" id="casoOut"><div class="empty-box"><span style="font-size:30px">??</span><span>Complete el formulario y presione analizar</span></div></div>
+        <h3 style="color:var(--p)">📋 Análisis jurídico</h3>
+        <div class="trib-output" id="casoOut"><div class="empty-box"><span style="font-size:30px">🔍</span><span>Complete el formulario y presione analizar</span></div></div>
       </div>
     </div>
   </div>
 
-  <!-- ?? ESCRITOS ?? -->
+  <!-- ESCRITOS -->
   <div class="view" id="vEscritos">
     <div class="escritos-wrap">
       <div class="escrito-types" id="eTypes"></div>
       <div class="escrito-form" id="eForm">
         <h3 id="eFormTitle">Seleccione un tipo de escrito</h3>
         <div id="eFields"></div>
-        <button class="gen-btn" id="eGenBtn" style="display:none">?? Generar <span id="eSpin" style="display:none" class="spinner"></span></button>
+        <button class="gen-btn" id="eGenBtn" style="display:none">✍️ Generar <span id="eSpin" style="display:none" class="spinner"></span></button>
       </div>
       <div class="escrito-output">
-        <h3>?? Escrito generado</h3>
-        <div class="output-area" id="eOutput"><div class="empty-box"><span style="font-size:30px">??</span><span>El escrito aparecer� aqu�</span></div></div>
-        <button class="copy-btn" id="copyEscritoBtn">?? Copiar texto</button>
+        <h3>📄 Escrito generado</h3>
+        <div class="output-area" id="eOutput"><div class="empty-box"><span style="font-size:30px">✍️</span><span>El escrito aparecerá aquí</span></div></div>
+        <div class="dl-btn-row">
+          <button class="copy-btn" id="copyEscritoBtn">📋 Copiar texto</button>
+          <button class="dl-btn word" id="wordEscritoBtn">📄 Descargar Word</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ?? ALERTAS ?? -->
+  <!-- ALERTAS -->
   <div class="view" id="vAlertas">
     <div class="panel-header">
-      <div><h2>?? Alertas de Jurisprudencia</h2><p id="alertaSubtitle">Novedades filtradas por tus materias</p></div>
-      <button class="action-btn" style="width:auto;padding:6px 13px;font-size:11px;margin:0" id="prefsBtn">?? Mis materias</button>
+      <div><h2>🔔 Alertas de Jurisprudencia</h2><p id="alertaSubtitle">Novedades filtradas por tus materias</p></div>
+      <button class="action-btn" style="width:auto;padding:6px 13px;font-size:11px;margin:0" id="prefsBtn">⚙️ Mis materias</button>
     </div>
     <div id="prefsPanel" style="display:none">
       <div class="prefs-inner">
-        <div style="font-size:11px;font-weight:700;color:var(--p);margin-bottom:3px">Selecciona tus materias de inter�s</div>
+        <div style="font-size:11px;font-weight:700;color:var(--p);margin-bottom:3px">Selecciona tus materias de interés</div>
         <div class="prefs-chips" id="prefsChips"></div>
         <button class="action-btn green" style="width:auto;padding:6px 14px;font-size:11px;margin:0" id="prefsSaveBtn">Guardar</button>
       </div>
@@ -533,99 +540,108 @@ mark{background:#fff3cd;padding:0 2px;border-radius:2px}
     <div class="alertas-list" id="alertasList"></div>
   </div>
 
-  <!-- ?? SUMARIOS Y LICENCIAS ?? -->
+  <!-- SUMARIOS Y LICENCIAS -->
   <div class="view" id="vSumarios">
     <div class="subtab-bar">
-      <div class="stab active" id="stab0" data-stab="0">??? Defensa en Sumarios</div>
-      <div class="stab" id="stab1" data-stab="1">?? Apelaci�n de Licencias</div>
+      <div class="stab active" id="stab0" data-stab="0">🗂️ Defensa en Sumarios</div>
+      <div class="stab" id="stab1" data-stab="1">🏥 Apelación de Licencias</div>
     </div>
     <div id="sumView0" class="trib-wrap">
       <div class="trib-form">
-        <h3 style="color:var(--a)">??? Estructurador de Descargos</h3>
-        <p style="color:var(--m);font-size:11px">Genera descargos ante sumario administrativo (Ley 18.834).</p>
-        <div class="fgroup"><label>Cargo / funci�n</label><input type="text" id="s_cargo" placeholder="ej: Enfermera, Administrativo"></div>
+        <h3 style="color:var(--a)">🗂️ Estructurador de Descargos</h3>
+        <p style="color:var(--m)">Genera descargos ante sumario administrativo (Ley 18.834).</p>
+        <div class="fgroup"><label>Cargo / función</label><input type="text" id="s_cargo" placeholder="ej: Enfermera, Administrativo"></div>
         <div class="fgroup"><label>Servicio u organismo</label><input type="text" id="s_servicio" placeholder="ej: Hospital Regional"></div>
         <div class="fgroup"><label>Cargo(s) formulados</label><textarea id="s_cargos" rows="3" placeholder="Describa los cargos..."></textarea></div>
-        <div class="fgroup"><label>Hechos seg�n el funcionario</label><textarea id="s_hechos" rows="4" placeholder="Versi�n del funcionario, fechas, testigos..."></textarea></div>
-        <div class="fgroup"><label>Atenuantes o justificaciones</label><textarea id="s_atenuantes" rows="3" placeholder="Buena conducta anterior, instrucciones de superior..."></textarea></div>
-        <button class="action-btn red" id="sumariosBtn">?? Generar descargos <span id="sumarSpin" style="display:none" class="spinner"></span></button>
+        <div class="fgroup"><label>Hechos según el funcionario</label><textarea id="s_hechos" rows="4" placeholder="Versión del funcionario, fechas, testigos..."></textarea></div>
+        <div class="fgroup"><label>Atenuantes o justificaciones</label><textarea id="s_atenuantes" rows="3" placeholder="Buena conducta anterior..."></textarea></div>
+        <button class="action-btn red" id="sumariosBtn">📝 Generar descargos <span id="sumarSpin" style="display:none" class="spinner"></span></button>
       </div>
       <div class="trib-result">
-        <h3 style="color:var(--a)">?? Descargos generados</h3>
-        <div class="trib-output" id="sumOut"><div class="empty-box"><span style="font-size:30px">???</span><span>Complete el formulario</span></div></div>
-        <button class="copy-btn" id="copySumBtn" style="margin-top:8px;flex-shrink:0">?? Copiar</button>
+        <h3 style="color:var(--a)">📋 Descargos generados</h3>
+        <div class="trib-output" id="sumOut"><div class="empty-box"><span style="font-size:30px">🗂️</span><span>Complete el formulario</span></div></div>
+        <div class="dl-btn-row" style="margin-top:8px;flex-shrink:0">
+          <button class="copy-btn" id="copySumBtn">📋 Copiar</button>
+          <button class="dl-btn word" id="wordSumBtn">📄 Descargar Word</button>
+        </div>
       </div>
     </div>
     <div id="sumView1" style="display:none" class="trib-wrap">
       <div class="trib-form">
-        <h3 style="color:var(--g)">?? Apelaci�n de Licencia M�dica</h3>
-        <p style="color:var(--m);font-size:11px">Recurso ante COMPIN o SUSESO por rechazo de licencia.</p>
+        <h3 style="color:var(--g)">🏥 Apelación de Licencia Médica</h3>
+        <p style="color:var(--m)">Recurso ante COMPIN o SUSESO por rechazo de licencia.</p>
         <div class="fgroup"><label>Nombre del paciente</label><input type="text" id="l_nombre" placeholder="Nombre completo"></div>
         <div class="fgroup"><label>Tipo de licencia</label>
-          <select id="l_tipo"><option value="enfermedad">Enfermedad com�n</option><option value="accidente">Accidente del trabajo</option><option value="maternal">Pre/post natal</option><option value="psiquiatrica">Enfermedad psiqui�trica</option></select>
+          <select id="l_tipo"><option value="enfermedad">Enfermedad común</option><option value="accidente">Accidente del trabajo</option><option value="maternal">Pre/post natal</option><option value="psiquiatrica">Enfermedad psiquiátrica</option></select>
         </div>
-        <div class="fgroup"><label>Organismo que rechaz�</label>
+        <div class="fgroup"><label>Organismo que rechazó</label>
           <select id="l_organismo"><option value="compin">COMPIN</option><option value="suseso">SUSESO</option><option value="isapre">ISAPRE</option><option value="mutualidad">Mutualidad</option></select>
         </div>
-        <div class="fgroup"><label>Motivo de rechazo</label><textarea id="l_rechazo" rows="2" placeholder="ej: No acredita relaci�n causal..."></textarea></div>
-        <div class="fgroup"><label>Diagn�stico m�dico</label><input type="text" id="l_diagnostico" placeholder="ej: S�ndrome depresivo mayor"></div>
-        <div class="fgroup"><label>Antecedentes m�dicos</label><textarea id="l_antecedentes" rows="3" placeholder="Tratamientos previos, m�dico tratante..."></textarea></div>
-        <button class="action-btn green" id="licenciaBtn">?? Generar apelaci�n <span id="licSpin" style="display:none" class="spinner"></span></button>
+        <div class="fgroup"><label>Motivo de rechazo</label><textarea id="l_rechazo" rows="2" placeholder="ej: No acredita relación causal..."></textarea></div>
+        <div class="fgroup"><label>Diagnóstico médico</label><input type="text" id="l_diagnostico" placeholder="ej: Síndrome depresivo mayor"></div>
+        <div class="fgroup"><label>Antecedentes médicos</label><textarea id="l_antecedentes" rows="3" placeholder="Tratamientos previos, médico tratante..."></textarea></div>
+        <button class="action-btn green" id="licenciaBtn">📝 Generar apelación <span id="licSpin" style="display:none" class="spinner"></span></button>
       </div>
       <div class="trib-result">
-        <h3 style="color:var(--g)">?? Recurso generado</h3>
-        <div class="trib-output" id="licOut"><div class="empty-box"><span style="font-size:30px">??</span><span>Complete el formulario</span></div></div>
-        <button class="copy-btn" id="copyLicBtn" style="margin-top:8px;flex-shrink:0">?? Copiar</button>
+        <h3 style="color:var(--g)">📋 Recurso generado</h3>
+        <div class="trib-output" id="licOut"><div class="empty-box"><span style="font-size:30px">🏥</span><span>Complete el formulario</span></div></div>
+        <div class="dl-btn-row" style="margin-top:8px;flex-shrink:0">
+          <button class="copy-btn" id="copyLicBtn">📋 Copiar</button>
+          <button class="dl-btn word" id="wordLicBtn">📄 Descargar Word</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ?? VISTA TRIBUNAL ?? -->
+  <!-- VISTA TRIBUNAL -->
   <div class="view" id="vTribunal">
     <div class="subtab-bar">
-      <div class="stab active" id="ttab0" data-ttab="0">?? Estructurador de Resoluciones</div>
-      <div class="stab" id="ttab1" data-ttab="1">?? Control de Congruencia</div>
+      <div class="stab active" id="ttab0" data-ttab="0">📋 Estructurador de Resoluciones</div>
+      <div class="stab" id="ttab1" data-ttab="1">🔎 Control de Congruencia</div>
     </div>
     <div id="tribView0" class="trib-wrap">
       <div class="trib-form">
-        <h3>?? Estructurador de Resoluciones</h3>
-        <p>Borrador de fallos: Vistos, Considerandos y Resolutivo.</p>
+        <h3 style="color:var(--purple)">📋 Estructurador de Resoluciones</h3>
+        <p style="color:var(--m)">Borrador de fallos: Vistos, Considerandos y Resolutivo.</p>
         <div class="fgroup"><label>Tribunal</label><input type="text" id="tr_tribunal" placeholder="ej: 2do Juzgado Laboral de Santiago"></div>
         <div class="fgroup"><label>RIT / Rol</label><input type="text" id="tr_rol" placeholder="ej: O-1234-2024"></div>
         <div class="fgroup"><label>Procedimiento</label>
-          <select id="tr_proc"><option>Aplicaci�n general (art. 446 CT)</option><option>Tutela laboral (art. 485 CT)</option><option>Monitorio (art. 496 CT)</option><option>Ejecuci�n laboral</option><option>Medida cautelar</option></select>
+          <select id="tr_proc"><option>Aplicación general (art. 446 CT)</option><option>Tutela laboral (art. 485 CT)</option><option>Monitorio (art. 496 CT)</option><option>Ejecución laboral</option><option>Medida cautelar</option></select>
         </div>
-        <div class="fgroup"><label>Acci�n del demandante</label><textarea id="tr_accion" rows="2" placeholder="ej: Cobro prestaciones despido injustificado art. 168 CT"></textarea></div>
+        <div class="fgroup"><label>Acción del demandante</label><textarea id="tr_accion" rows="2" placeholder="ej: Cobro prestaciones despido injustificado art. 168 CT"></textarea></div>
         <div class="fgroup"><label>Defensa del demandado</label><textarea id="tr_defensa" rows="2" placeholder="ej: Causal art. 160 N7..."></textarea></div>
         <div class="fgroup"><label>Hechos probados</label><textarea id="tr_hechos" rows="3" placeholder="Resume los hechos acreditados..."></textarea></div>
-        <button class="action-btn purple" style="background:var(--purple)" id="tribBtn">?? Generar borrador <span id="tribSpin" style="display:none" class="spinner"></span></button>
+        <button class="action-btn" style="background:var(--purple)" id="tribBtn">⚖️ Generar borrador <span id="tribSpin" style="display:none" class="spinner"></span></button>
       </div>
       <div class="trib-result">
-        <h3>?? Borrador de resoluci�n</h3>
-        <div class="trib-output" id="tribOut"><div class="empty-box"><span style="font-size:30px">??</span><span>Complete el formulario</span></div></div>
-        <button class="copy-btn" id="copyTribBtn" style="margin-top:8px;flex-shrink:0">?? Copiar</button>
+        <h3 style="color:var(--purple)">📄 Borrador de resolución</h3>
+        <div class="trib-output" id="tribOut"><div class="empty-box"><span style="font-size:30px">⚖️</span><span>Complete el formulario</span></div></div>
+        <div class="dl-btn-row" style="margin-top:8px;flex-shrink:0">
+          <button class="copy-btn" id="copyTribBtn">📋 Copiar</button>
+          <button class="dl-btn word" id="wordTribBtn">📄 Descargar Word</button>
+        </div>
       </div>
     </div>
     <div id="tribView1" style="display:none" class="trib-wrap">
       <div class="trib-form">
-        <h3>?? Control de Congruencia</h3>
-        <p>Verifica que todos los argumentos fueron abordados.</p>
+        <h3 style="color:var(--purple)">🔎 Control de Congruencia</h3>
+        <p style="color:var(--m)">Verifica que todos los argumentos fueron abordados.</p>
         <div class="fgroup"><label>Argumentos del demandante</label><textarea id="cg_demandante" rows="4" placeholder="Argumentos de hecho y derecho..."></textarea></div>
         <div class="fgroup"><label>Argumentos del demandado</label><textarea id="cg_demandado" rows="4" placeholder="Argumentos de defensa..."></textarea></div>
-        <div class="fgroup"><label>Borrador del fallo</label><textarea id="cg_fallo" rows="5" placeholder="Pegue aqu� el borrador a revisar..."></textarea></div>
-        <button class="action-btn purple" style="background:var(--purple)" id="congrBtn">?? Revisar <span id="congrSpin" style="display:none" class="spinner"></span></button>
+        <div class="fgroup"><label>Borrador del fallo</label><textarea id="cg_fallo" rows="5" placeholder="Pegue aquí el borrador a revisar..."></textarea></div>
+        <button class="action-btn" style="background:var(--purple)" id="congrBtn">🔎 Revisar <span id="congrSpin" style="display:none" class="spinner"></span></button>
       </div>
       <div class="trib-result">
-        <h3>?? Informe de congruencia</h3>
-        <div class="trib-output" id="congrOut"><div class="empty-box"><span style="font-size:30px">??</span><span>Complete los campos</span></div></div>
-        <button class="copy-btn" id="copyCongrBtn" style="margin-top:8px;flex-shrink:0">?? Copiar</button>
+        <h3 style="color:var(--purple)">📋 Informe de congruencia</h3>
+        <div class="trib-output" id="congrOut"><div class="empty-box"><span style="font-size:30px">🔎</span><span>Complete los campos</span></div></div>
+        <button class="copy-btn" id="copyCongrBtn" style="margin-top:8px;flex-shrink:0">📋 Copiar</button>
       </div>
     </div>
   </div>
 
-  <!-- ?? CRITERIOS POR CORTE ?? -->
+  <!-- CRITERIOS POR CORTE -->
   <div class="view" id="vCortes">
-    <div class="panel-header"><div><h2>??? Criterios por Corte de Apelaciones</h2><p>Tendencias jurisprudenciales por tribunal</p></div></div>
+    <div class="panel-header"><div><h2>🗺️ Criterios por Corte de Apelaciones</h2><p>Tendencias jurisprudenciales por tribunal</p></div></div>
     <div class="cortes-wrap">
       <div class="cortes-left">
         <div class="corte-selector">
@@ -635,36 +651,39 @@ mark{background:#fff3cd;padding:0 2px;border-radius:2px}
         <div class="materia-selector">
           <h4>Materia a consultar</h4>
           <div class="fgroup"><select id="corteMateria">
-            <option>Tutela laboral (art. 485 CT)</option>
-            <option>Despido injustificado</option><option>Acoso laboral</option>
-            <option>Fuero maternal / desafuero</option><option>Accidentes del trabajo</option>
-            <option>Subcontrataci�n</option><option>Negociaci�n colectiva / huelga</option>
-            <option>Teletrabajo</option><option>Honorarios sector p�blico</option>
+            <option>Tutela laboral (art. 485 CT)</option><option>Despido injustificado</option>
+            <option>Acoso laboral</option><option>Fuero maternal / desafuero</option>
+            <option>Accidentes del trabajo</option><option>Subcontratación</option>
+            <option>Negociación colectiva / huelga</option><option>Teletrabajo</option>
+            <option>Honorarios sector público</option>
           </select></div>
-          <button class="action-btn" id="cortesBtn">??? Ver criterio local</button>
+          <button class="action-btn" id="cortesBtn">🗺️ Ver criterio local</button>
         </div>
       </div>
       <div class="cortes-right">
-        <h3>?? Tendencia jurisprudencial local</h3>
-        <div class="cortes-output" id="cortesOut"><div class="empty-box"><span style="font-size:30px">???</span><span>Selecciona una Corte y una materia</span></div></div>
+        <h3>📊 Tendencia jurisprudencial local</h3>
+        <div class="cortes-output" id="cortesOut"><div class="empty-box"><span style="font-size:30px">🗺️</span><span>Selecciona una Corte y una materia</span></div></div>
       </div>
     </div>
   </div>
 
-  <!-- ?? RECLAMOS ?? -->
+  <!-- RECLAMOS -->
   <div class="view" id="vReclamos">
-    <div class="panel-header"><div><h2>?? Gestor de Reclamos</h2><p>Isapre � Superintendencia � Dir. del Trabajo � SUSESO</p></div></div>
+    <div class="panel-header"><div><h2>📨 Gestor de Reclamos</h2><p>Isapre · Superintendencia · Dir. del Trabajo · SUSESO</p></div></div>
     <div class="reclamos-wrap">
       <div class="reclamo-nav" id="reclamoNav"></div>
       <div class="escrito-form" id="reclamoForm">
         <h3 id="reclamoTitle">Seleccione un tipo de reclamo</h3>
         <div id="reclamoFields"></div>
-        <button class="gen-btn" id="reclamoGenBtn" style="display:none">?? Generar reclamo <span id="reclamoSpin" style="display:none" class="spinner"></span></button>
+        <button class="gen-btn" id="reclamoGenBtn" style="display:none">📨 Generar reclamo <span id="reclamoSpin" style="display:none" class="spinner"></span></button>
       </div>
       <div class="escrito-output">
-        <h3>?? Reclamo generado</h3>
-        <div class="output-area" id="reclamoOut"><div class="empty-box"><span style="font-size:30px">??</span><span>El reclamo aparecer� aqu�</span></div></div>
-        <button class="copy-btn" id="copyReclamoBtn">?? Copiar texto</button>
+        <h3>📄 Reclamo generado</h3>
+        <div class="output-area" id="reclamoOut"><div class="empty-box"><span style="font-size:30px">📨</span><span>El reclamo aparecerá aquí</span></div></div>
+        <div class="dl-btn-row">
+          <button class="copy-btn" id="copyReclamoBtn">📋 Copiar texto</button>
+          <button class="dl-btn word" id="wordReclamoBtn">📄 Descargar Word</button>
+        </div>
       </div>
     </div>
   </div>
@@ -675,199 +694,218 @@ mark{background:#fff3cd;padding:0 2px;border-radius:2px}
 <script>
 'use strict';
 
-// ??????????????????????????????????????????
-// MEJORA 2: L�GICA DEL DISCLAIMER
-// Se muestra siempre al inicio de la sesi�n.
-// No usa localStorage � cumple con restricciones del entorno.
-// ??????????????????????????????????????????
-let disclaimerAccepted = false;
-
-function toggleDiscCheck(checked) {
-  const btn = document.getElementById('discAcceptBtn');
-  btn.classList.toggle('ready', checked);
+// ══════════════════════════════════════════
+// DISCLAIMER
+// ══════════════════════════════════════════
+function toggleDiscCheck(checked){
+  document.getElementById('discAcceptBtn').classList.toggle('ready',checked);
+}
+function acceptDisclaimer(){
+  const o=document.getElementById('disclaimerOverlay');
+  o.style.transition='opacity .3s';o.style.opacity='0';
+  setTimeout(()=>o.remove(),300);
 }
 
-function acceptDisclaimer() {
-  disclaimerAccepted = true;
-  const overlay = document.getElementById('disclaimerOverlay');
-  overlay.style.transition = 'opacity .3s';
-  overlay.style.opacity = '0';
-  setTimeout(() => overlay.remove(), 300);
+// ══════════════════════════════════════════
+// PERSISTENCIA EN MEMORIA (sesión activa)
+// ══════════════════════════════════════════
+const formState={};
+function trackField(id){
+  const el=document.getElementById(id);if(!el)return;
+  if(formState[id]!==undefined)el.value=formState[id];
+  el.addEventListener('input',()=>{formState[id]=el.value;});
+  el.addEventListener('change',()=>{formState[id]=el.value;});
 }
+function trackFields(ids){ids.forEach(trackField);}
+const PERSISTENT_FIELDS=['cTipo','cRem','cAnios','cMeses','cVacProp','cUF','cAviso','cParte','cArea','cHechos','cObj','s_cargo','s_servicio','s_cargos','s_hechos','s_atenuantes','l_nombre','l_tipo','l_organismo','l_rechazo','l_diagnostico','l_antecedentes','tr_tribunal','tr_rol','tr_proc','tr_accion','tr_defensa','tr_hechos','cg_demandante','cg_demandado','cg_fallo','corteMateria'];
 
-// ??????????????????????????????????????????
-// MEJORA 3: SISTEMA DE PERSISTENCIA EN MEMORIA
-// Almacena el estado de todos los campos de texto
-// en un objeto JS durante la sesi�n activa.
-// Cuando el usuario cambia de tab y vuelve,
-// los valores se restauran autom�ticamente.
-// ??????????????????????????????????????????
-const formState = {}; // { fieldId: value }
-
-/**
- * Registra un campo para persistencia autom�tica.
- * @param {string} id - ID del elemento HTML
- */
-function trackField(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  // Restaurar valor guardado si existe
-  if (formState[id] !== undefined) el.value = formState[id];
-  // Guardar en cada cambio
-  el.addEventListener('input', () => { formState[id] = el.value; });
-  el.addEventListener('change', () => { formState[id] = el.value; });
-}
-
-/**
- * Registra m�ltiples campos de un m�dulo.
- * @param {string[]} ids - Lista de IDs a trackear
- */
-function trackFields(ids) { ids.forEach(trackField); }
-
-// IDs de todos los campos persistentes de la app
-const PERSISTENT_FIELDS = [
-  // Calculadora
-  'cTipo','cRem','cAnios','cMeses','cVacProp','cAviso',
-  // An�lisis de caso
-  'cParte','cArea','cHechos','cObj',
-  // Sumarios
-  's_cargo','s_servicio','s_cargos','s_hechos','s_atenuantes',
-  // Licencias
-  'l_nombre','l_tipo','l_organismo','l_rechazo','l_diagnostico','l_antecedentes',
-  // Tribunal
-  'tr_tribunal','tr_rol','tr_proc','tr_accion','tr_defensa','tr_hechos',
-  // Congruencia
-  'cg_demandante','cg_demandado','cg_fallo',
-  // Cortes
-  'corteMateria',
-];
-
-// ??????????????????????????????????????????
-// DATA
-// ??????????????????????????????????????????
-const QQ = {
-  despido:'Despido injustificado art�culos 159 160 161 CT jurisprudencia',
-  acoso:'Acoso laboral art�culo 2 CT mobbing jurisprudencia',
-  tutela:'Tutela laboral art�culo 485 CT derechos fundamentales',
-  accidente:'Accidente del trabajo Ley 16744 responsabilidad empleador jurisprudencia',
-  huelga:'Negociaci�n colectiva Ley 20940 huelga servicios m�nimos',
-  honorarios:'Honorarios sector p�blico Contraloria vinculo laboral encubierto',
+// ══════════════════════════════════════════
+// MENSAJES DE CARGA DINÁMICOS
+// ══════════════════════════════════════════
+const LOADING_MSGS={
+  default:  ['Procesando consulta...','Analizando jurisprudencia...','Estructurando respuesta...','Revisando normativa vigente...','Casi listo...'],
+  caso:     ['Analizando los hechos del caso...','Identificando normas aplicables...','Revisando jurisprudencia relevante...','Evaluando estrategias procesales...','Estructurando el análisis jurídico...'],
+  escrito:  ['Redactando el documento...','Aplicando formato jurídico chileno...','Incorporando citas legales...','Revisando coherencia procesal...','Finalizando el escrito...'],
+  sumario:  ['Analizando los cargos formulados...','Estructurando los descargos...','Citando Estatuto Administrativo...','Incorporando atenuantes...','Finalizando el escrito de descargos...'],
+  licencia: ['Revisando el motivo de rechazo...','Analizando normativa COMPIN/SUSESO...','Estructurando el recurso...','Incorporando antecedentes médicos...','Redactando la apelación...'],
+  fallo:    ['Analizando los hechos probados...','Estructurando los Vistos...','Redactando los Considerandos...','Aplicando sana crítica (art. 456 CT)...','Elaborando la Parte Resolutiva...'],
+  cortes:   ['Consultando tendencias locales...','Analizando jurisprudencia del distrito...','Identificando criterios específicos...','Evaluando estrategias locales...','Preparando el informe...'],
+  reclamo:  ['Identificando la normativa infringida...','Estructurando el reclamo...','Incorporando fundamentos legales...','Redactando la petición concreta...','Finalizando el documento...'],
 };
-const WELCOME_SUGGS=[
-  {label:'Ley 16.744',desc:'Accidentes y responsabilidad del empleador',k:'accidente'},
-  {label:'Ley 20.940',desc:'Negociaci�n colectiva y huelga',k:'huelga'},
-  {label:'Contraloria',desc:'Honorarios y v�nculo laboral p�blico',k:'honorarios'},
-  {label:'Tutela art. 485',desc:'Derechos fundamentales laborales',k:'tutela'},
-];
+function startLoadingMsg(outId,tipo='default',icon='⏳'){
+  const el=document.getElementById(outId);
+  const msgs=LOADING_MSGS[tipo]||LOADING_MSGS.default;
+  let idx=0;
+  const render=()=>{el.innerHTML=`<div class="empty-box" style="gap:12px"><span style="font-size:28px;animation:spin .7s linear infinite;display:inline-block">${icon}</span><span style="font-weight:600;color:var(--p);font-size:12px" id="_ldmsg">${msgs[idx]}</span><span style="font-size:10px;color:var(--m)">Esto puede tardar unos segundos…</span></div>`;};
+  render();
+  const iv=setInterval(()=>{idx=(idx+1)%msgs.length;const s=document.getElementById('_ldmsg');if(s){s.style.opacity='0';setTimeout(()=>{s.textContent=msgs[idx];s.style.opacity='1';},200);}},2500);
+  return ()=>clearInterval(iv);
+}
+
+// ══════════════════════════════════════════
+// GUARDAR CHAT (.TXT)
+// ══════════════════════════════════════════
+function saveChat(){
+  const bubbles=document.querySelectorAll('#msgs .msg');
+  if(!bubbles.length){alert('No hay mensajes en el chat para guardar.');return;}
+  const lines=['JurisBot Laboral Chile — Historial de Conversación','Exportado el: '+new Date().toLocaleString('es-CL'),'═'.repeat(55),''];
+  bubbles.forEach(msg=>{
+    lines.push(msg.classList.contains('user')?'👤 USUARIO':'⚖️ JURISBOT');
+    lines.push(msg.querySelector('.bubble')?.innerText?.trim()||'');
+    lines.push('─'.repeat(40),'');
+  });
+  lines.push('','⚠️ AVISO LEGAL: Los resultados de JurisBot son orientativos y no constituyen asesoría legal oficial.');
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`JurisBot_Chat_${new Date().toISOString().slice(0,10)}.txt`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// ══════════════════════════════════════════
+// DESCARGAR WORD (.DOC)
+// Genera un HTML enriquecido que Word abre
+// nativamente sin librerías externas.
+// ══════════════════════════════════════════
+function downloadWord(sourceId,filename){
+  const el=document.getElementById(sourceId);
+  const content=el.innerText||el.textContent||'';
+  if(!content.trim()||content.includes('aparecerá aquí')||content.includes('Complete')){
+    alert('No hay contenido generado para descargar.');return;
+  }
+  const html=`
+    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+          xmlns:w="urn:schemas-microsoft-com:office:word"
+          xmlns="http://www.w3.org/TR/REC-html40">
+    <head><meta charset="utf-8">
+    <style>
+      body{font-family:Arial,sans-serif;font-size:12pt;line-height:1.6;margin:2cm}
+      p{margin-bottom:8pt}
+      strong{font-weight:bold}
+      .footer{font-size:9pt;color:#888;border-top:1px solid #ccc;margin-top:24pt;padding-top:8pt}
+    </style></head>
+    <body>
+      <p><strong>JurisBot Laboral Chile</strong></p>
+      <p><em>Generado el: ${new Date().toLocaleString('es-CL')}</em></p>
+      <hr>
+      <div>${content.replace(/\n/g,'<br>')}</div>
+      <div class="footer">⚠️ Documento generado por JurisBot. Los resultados son orientativos y no constituyen asesoría legal oficial. Verifique siempre en fuentes oficiales: pjud.cl · dt.gob.cl · contraloria.cl</div>
+    </body></html>`;
+  const blob=new Blob(['\ufeff'+html],{type:'application/msword'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename+'.doc';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// ══════════════════════════════════════════
+// SANITIZACIÓN Y PARSING SEGURO
+// ══════════════════════════════════════════
+function sanitizeAndParseNumber(raw){
+  try{
+    if(raw===null||raw===undefined)return null;
+    let s=String(raw).trim();if(s==='')return null;
+    s=s.replace(/[$€£¥]/g,'').replace(/\s/g,'').replace(/,/g,'');
+    const pts=(s.match(/\./g)||[]).length;
+    if(pts>1){s=s.replace(/\./g,'');}
+    else if(pts===1){const dec=s.split('.')[1];if(dec&&dec.length>2)s=s.replace(/\./g,'');}
+    s=s.replace(/[^\d.]/g,'');
+    if(s===''||s==='.')return null;
+    const n=parseFloat(s);
+    if(!isFinite(n)||isNaN(n)||n<0)return null;
+    return n;
+  }catch(e){console.warn('[JurisBot] sanitize error:',e);return null;}
+}
+function validateField(id,errId,min,max=Infinity,isCurrency=false){
+  const el=document.getElementById(id);const errEl=document.getElementById(errId);
+  el.classList.remove('input-error');errEl.classList.remove('show');
+  const val=isCurrency?sanitizeAndParseNumber(el.value):parseFloat(el.value);
+  if(val===null||isNaN(val)||val<min||val>max){el.classList.add('input-error');errEl.classList.add('show');return null;}
+  return val;
+}
+
+// ══════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════
+const QQ={despido:'Despido injustificado artículos 159 160 161 CT jurisprudencia',acoso:'Acoso laboral artículo 2 CT mobbing jurisprudencia',tutela:'Tutela laboral artículo 485 CT derechos fundamentales',accidente:'Accidente del trabajo Ley 16744 responsabilidad empleador jurisprudencia',huelga:'Negociación colectiva Ley 20940 huelga servicios mínimos',honorarios:'Honorarios sector público Contraloria vinculo laboral encubierto'};
+const WELCOME_SUGGS=[{label:'Ley 16.744',desc:'Accidentes y responsabilidad del empleador',k:'accidente'},{label:'Ley 20.940',desc:'Negociación colectiva y huelga',k:'huelga'},{label:'Contraloria',desc:'Honorarios y vínculo laboral público',k:'honorarios'},{label:'Tutela art. 485',desc:'Derechos fundamentales laborales',k:'tutela'}];
 const LEYES=[
-  {id:'ct',label:'?? C�digo del Trabajo',sub:'DFL 1/2005',titulos:[
+  {id:'ct',label:'📖 Código del Trabajo',sub:'DFL 1/2005',titulos:[
     {n:'Contrato de Trabajo',arts:[
-      {n:'2',t:'Es contrario a la dignidad de la persona el acoso sexual y el acoso laboral. Se entiende por acoso laboral toda conducta que constituya agresi�n u hostigamiento reiterados que tenga como resultado menoscabo, maltrato o humillaci�n, o amenace su situaci�n laboral.'},
-      {n:'7',t:'Contrato de trabajo es una convenci�n por la cual el empleador y el trabajador se obligan rec�procamente: el trabajador a prestar servicios personales bajo dependencia y subordinaci�n, y el empleador a pagar una remuneraci�n determinada.'},
-      {n:'8',t:'Toda prestaci�n de servicios hace presumir la existencia de un contrato de trabajo.'},
-      {n:'10',t:'El contrato debe contener: lugar y fecha; individualizaci�n de las partes; naturaleza y lugar de los servicios; monto, forma y per�odo de pago; duraci�n y distribuci�n de la jornada; plazo del contrato.'},
+      {n:'2',t:'Es contrario a la dignidad de la persona el acoso sexual y el acoso laboral. Se entiende por acoso laboral toda conducta que constituya agresión u hostigamiento reiterados que tenga como resultado menoscabo, maltrato o humillación, o amenace su situación laboral.'},
+      {n:'7',t:'Contrato de trabajo es una convención por la cual el empleador y el trabajador se obligan recíprocamente: el trabajador a prestar servicios personales bajo dependencia y subordinación, y el empleador a pagar una remuneración determinada.'},
+      {n:'8',t:'Toda prestación de servicios hace presumir la existencia de un contrato de trabajo.'},
+      {n:'10',t:'El contrato debe contener: lugar y fecha; individualización de las partes; naturaleza y lugar de los servicios; monto, forma y período de pago; duración y distribución de la jornada; plazo del contrato.'},
     ]},
     {n:'Jornada de Trabajo',arts:[
-      {n:'22',t:'La jornada ordinaria no exceder� de 40 horas semanales. Quedan excluidos los gerentes, administradores y quienes trabajen sin fiscalizaci�n superior inmediata.'},
-      {n:'32',t:'Las horas extraordinarias se pagar�n con recargo del 50% sobre el sueldo convenido para la jornada ordinaria, liquid�ndose y pag�ndose junto con las remuneraciones ordinarias del per�odo.'},
+      {n:'22',t:'La jornada ordinaria no excederá de 40 horas semanales. Quedan excluidos los gerentes, administradores y quienes trabajen sin fiscalización superior inmediata.'},
+      {n:'32',t:'Las horas extraordinarias se pagarán con recargo del 50% sobre el sueldo convenido para la jornada ordinaria.'},
     ]},
     {n:'Remuneraciones',arts:[
-      {n:'41',t:'Remuneraci�n son las contraprestaciones en dinero y adicionales en especie que debe percibir el trabajador por causa del contrato.'},
-      {n:'44',t:'El sueldo mensual no podr� ser inferior al ingreso m�nimo mensual.'},
+      {n:'41',t:'Remuneración son las contraprestaciones en dinero y adicionales en especie que debe percibir el trabajador por causa del contrato.'},
+      {n:'44',t:'El sueldo mensual no podrá ser inferior al ingreso mínimo mensual.'},
     ]},
-    {n:'T�rmino del Contrato',arts:[
-      {n:'159',t:'Causales sin indemnizaci�n: 1. Mutuo acuerdo; 2. Renuncia (30 d�as aviso); 3. Muerte; 4. Vencimiento del plazo; 5. Conclusi�n del trabajo; 6. Caso fortuito o fuerza mayor.'},
-      {n:'160',t:'T�rmino sin indemnizaci�n por causas imputables al trabajador: falta de probidad, acoso, v�as de hecho, injurias, inasistencias injustificadas, abandono, incumplimiento grave de obligaciones contractuales.'},
-      {n:'161',t:'Necesidades de la empresa: racionalizaci�n, modernizaci�n, baja productividad. Con indemnizaci�n por a�os de servicio y sustitutiva de aviso previo.'},
-      {n:'162',t:'El aviso de despido debe ser escrito, con 30 d�as de anticipaci�n o pago sustitutivo equivalente a la �ltima remuneraci�n mensual.'},
-      {n:'168',t:'El trabajador puede recurrir al juzgado laboral dentro de 60 d�as h�biles. Recargo del 30%, 50% u 80% seg�n causal invocada.'},
+    {n:'Término del Contrato',arts:[
+      {n:'159',t:'Causales sin indemnización: 1. Mutuo acuerdo; 2. Renuncia (30 días aviso); 3. Muerte; 4. Vencimiento del plazo; 5. Conclusión del trabajo; 6. Caso fortuito o fuerza mayor.'},
+      {n:'160',t:'Término sin indemnización por causas imputables al trabajador: falta de probidad, acoso, vías de hecho, injurias, inasistencias injustificadas, abandono, incumplimiento grave de obligaciones contractuales.'},
+      {n:'161',t:'Necesidades de la empresa: racionalización, modernización, baja productividad. Con indemnización por años de servicio y sustitutiva de aviso previo.'},
+      {n:'162',t:'El aviso de despido debe ser escrito, con 30 días de anticipación o pago sustitutivo equivalente a la última remuneración mensual.'},
+      {n:'163',t:'La indemnización por años de servicio no podrá exceder de 90 UF del último mes según el contrato, calculadas éstas a la fecha del término del contrato.'},
+      {n:'168',t:'El trabajador puede recurrir al juzgado laboral dentro de 60 días hábiles. Recargo del 30%, 50% u 80% según causal invocada.'},
     ]},
     {n:'Tutela Laboral',arts:[
-      {n:'485',t:'El procedimiento de tutela se aplica cuando actos del empleador vulneran derechos fundamentales del trabajador reconocidos en el art. 19 de la Constituci�n.'},
+      {n:'485',t:'El procedimiento de tutela se aplica cuando actos del empleador vulneran derechos fundamentales del trabajador reconocidos en el art. 19 de la Constitución.'},
     ]},
   ]},
-  {id:'l16744',label:'??? Ley 16.744',sub:'Accidentes del Trabajo',titulos:[
+  {id:'l16744',label:'🛡️ Ley 16.744',sub:'Accidentes del Trabajo',titulos:[
     {n:'Disposiciones Generales',arts:[
-      {n:'5',t:'Accidente del trabajo: toda lesi�n que una persona sufra a causa o con ocasi�n del trabajo. Incluye accidentes de trayecto.'},
-      {n:'69',t:'Cuando el accidente se deba a culpa o dolo del empleador, la v�ctima puede reclamar indemnizaci�n adicional por los da�os causados.'},
+      {n:'5',t:'Accidente del trabajo: toda lesión que una persona sufra a causa o con ocasión del trabajo. Incluye accidentes de trayecto.'},
+      {n:'69',t:'Cuando el accidente se deba a culpa o dolo del empleador, la víctima puede reclamar indemnización adicional por los daños causados.'},
     ]},
   ]},
-  {id:'l20940',label:'?? Ley 20.940',sub:'Modernizaci�n Sindical',titulos:[
-    {n:'Negociaci�n Colectiva',arts:[
-      {n:'345',t:'La huelga se har� efectiva al inicio de la jornada del d�cimo d�a siguiente a la votaci�n.'},
+  {id:'l20940',label:'🤝 Ley 20.940',sub:'Modernización Sindical',titulos:[
+    {n:'Negociación Colectiva',arts:[
+      {n:'345',t:'La huelga se hará efectiva al inicio de la jornada del décimo día siguiente a la votación.'},
       {n:'359',t:'Declarada la huelga, el empleador no puede contratar trabajadores que reemplacen a los huelguistas.'},
     ]},
   ]},
-  {id:'estAdm',label:'??? Estatuto Administrativo',sub:'Ley 18.834',titulos:[
+  {id:'estAdm',label:'🏛️ Estatuto Administrativo',sub:'Ley 18.834',titulos:[
     {n:'Sumarios Administrativos',arts:[
-      {n:'137',t:'El fiscal formular� cargos en resoluci�n fundada. El inculpado tiene 5 d�as h�biles para presentar sus descargos.'},
-      {n:'147',t:'La destituci�n es la medida disciplinaria de mayor gravedad.'},
+      {n:'137',t:'El fiscal formulará cargos en resolución fundada. El inculpado tiene 5 días hábiles para presentar sus descargos.'},
+      {n:'147',t:'La destitución es la medida disciplinaria de mayor gravedad.'},
     ]},
   ]},
 ];
 const CTR=[
-  {num:'2.669/2017',mat:'Honorarios � V�nculo laboral encubierto',res:'Si concurren elementos de subordinaci�n y dependencia, puede configurarse una relaci�n laboral encubierta.',tags:['Honorarios','V�nculo laboral']},
-  {num:'68.773/2016',mat:'Funcionarios a contrata � Renovaci�n y cese',res:'Los funcionarios a contrata cesan autom�ticamente el 31 de diciembre. La no renovaci�n no requiere expresi�n de causa.',tags:['A contrata','Renovaci�n']},
-  {num:'55.030/2019',mat:'Acoso laboral en sector p�blico',res:'El acoso laboral en la funci�n p�blica configura una infracci�n grave que puede derivar en destituci�n.',tags:['Acoso laboral','Destituci�n']},
-  {num:'3.210/2025',mat:'Honorarios � Expectativa leg�tima de renovaci�n (+3 a�os)',res:'Los contratados a honorarios por m�s de 3 a�os en labores permanentes tienen expectativa leg�tima de renovaci�n.',tags:['Honorarios','Expectativa leg�tima']},
+  {num:'2.669/2017',mat:'Honorarios — Vínculo laboral encubierto',res:'Si concurren elementos de subordinación y dependencia, puede configurarse una relación laboral encubierta.',tags:['Honorarios','Vínculo laboral']},
+  {num:'68.773/2016',mat:'Funcionarios a contrata — Renovación y cese',res:'Los funcionarios a contrata cesan automáticamente el 31 de diciembre. La no renovación no requiere expresión de causa.',tags:['A contrata','Renovación']},
+  {num:'55.030/2019',mat:'Acoso laboral en sector público',res:'El acoso laboral en la función pública configura una infracción grave que puede derivar en destitución.',tags:['Acoso laboral','Destitución']},
+  {num:'3.210/2025',mat:'Honorarios — Expectativa legítima de renovación (+3 años)',res:'Los contratados a honorarios por más de 3 años en labores permanentes tienen expectativa legítima de renovación.',tags:['Honorarios','Expectativa legítima']},
 ];
-const ALL_MATERIAS=['Despido injustificado','Acoso laboral','Subcontrataci�n','Sector p�blico','Sindicatos y huelga','Accidentes del trabajo','Remuneraciones','Tutela laboral','Teletrabajo','Maternidad y paternidad','Contrato a honorarios'];
+const ALL_MATERIAS=['Despido injustificado','Acoso laboral','Subcontratación','Sector público','Sindicatos y huelga','Accidentes del trabajo','Remuneraciones','Tutela laboral','Teletrabajo','Maternidad y paternidad','Contrato a honorarios'];
 const SENTENCIAS=[
-  {id:1,tipo:'cambio',tribunal:'Corte Suprema, Cuarta Sala',fecha:'15 enero 2025',rol:'45.678-2024',materia:'Despido injustificado',titulo:'Suprema cambia criterio sobre descuento de AFC en despidos por necesidades de la empresa',tldr:'?? **Cambio:** La Suprema establece que el descuento del seguro de cesant�a s� procede en despidos por art. 161 CT.',cita:'Excelent�sima Corte Suprema, Cuarta Sala, 15 de enero de 2025, Rol N� 45.678-2024'},
-  {id:2,tipo:'nuevo',tribunal:'Corte de Apelaciones de Santiago',fecha:'8 febrero 2025',rol:'12.340-2024',materia:'Acoso laboral',titulo:'CA Santiago: El silencio del empleador ante denuncias de acoso configura vulneraci�n de derechos fundamentales',tldr:'?? **Criterio nuevo:** La omisi�n de iniciar una investigaci�n dentro de 30 d�as constituye vulneraci�n del art. 19 N�1 CPR.',cita:'Ilustr�sima Corte de Apelaciones de Santiago, 8 de febrero de 2025, Rol N� 12.340-2024'},
-  {id:5,tipo:'nuevo',tribunal:'Contralor�a General de la Rep�blica',fecha:'5 febrero 2025',rol:'Dictamen 3.210/2025',materia:'Contrato a honorarios',titulo:'CGR: Honorarios +3 a�os generan expectativa leg�tima de renovaci�n',tldr:'?? **Criterio nuevo:** Los contratados a honorarios por m�s de 3 a�os tienen expectativa leg�tima de renovaci�n.',cita:'Contralor�a General de la Rep�blica, Dictamen N� 3.210/2025'},
+  {id:1,tipo:'cambio',tribunal:'Corte Suprema, Cuarta Sala',fecha:'15 enero 2025',rol:'45.678-2024',materia:'Despido injustificado',titulo:'Suprema cambia criterio sobre descuento de AFC en despidos por necesidades de la empresa',tldr:'⚖️ **Cambio:** La Suprema establece que el descuento del seguro de cesantía sí procede en despidos por art. 161 CT.',cita:'Excelentísima Corte Suprema, Cuarta Sala, 15 de enero de 2025, Rol N° 45.678-2024'},
+  {id:2,tipo:'nuevo',tribunal:'Corte de Apelaciones de Santiago',fecha:'8 febrero 2025',rol:'12.340-2024',materia:'Acoso laboral',titulo:'CA Santiago: El silencio del empleador ante denuncias de acoso configura vulneración de derechos fundamentales',tldr:'🆕 **Criterio nuevo:** La omisión de iniciar una investigación dentro de 30 días constituye vulneración del art. 19 N°1 CPR.',cita:'Ilustrísima Corte de Apelaciones de Santiago, 8 de febrero de 2025, Rol N° 12.340-2024'},
+  {id:5,tipo:'nuevo',tribunal:'Contraloría General de la República',fecha:'5 febrero 2025',rol:'Dictamen 3.210/2025',materia:'Contrato a honorarios',titulo:'CGR: Honorarios +3 años generan expectativa legítima de renovación',tldr:'🆕 **Criterio nuevo:** Los contratados a honorarios por más de 3 años tienen expectativa legítima de renovación.',cita:'Contraloría General de la República, Dictamen N° 3.210/2025'},
 ];
 const ESCRITOS=[
-  {id:'demanda',icon:'??',name:'Demanda laboral',desc:'Despido injustificado o tutela',fields:[
-    {id:'tribunal',label:'Tribunal',type:'text',ph:'ej: 1er Juzgado Laboral de Santiago'},
-    {id:'demandante',label:'Nombre trabajador',type:'text',ph:'Nombre completo'},
-    {id:'demandado',label:'Empleador/empresa',type:'text',ph:'Empresa S.A.'},
-    {id:'causa',label:'Causal de despido',type:'text',ph:'ej: art. 161 CT'},
-    {id:'hechos_dem',label:'Hechos',type:'textarea',ph:'Fecha inicio, cargo, remuneraci�n, forma del despido...'},
-    {id:'peticiones',label:'Peticiones',type:'text',ph:'ej: nulidad, indemnizaciones'},
-  ]},
-  {id:'carta_aviso',icon:'??',name:'Carta aviso de t�rmino',desc:'Arts. 159, 160, 161 CT',fields:[
-    {id:'empleador',label:'Raz�n social empleador',type:'text',ph:'Empresa S.A.'},
-    {id:'trabajador',label:'Nombre del trabajador',type:'text',ph:'Nombre completo'},
-    {id:'causal_aviso',label:'Causal legal',type:'select',opts:['Art. 159 N1 � Mutuo acuerdo','Art. 159 N4 � Vencimiento del plazo','Art. 160 N7 � Incumplimiento grave','Art. 161 � Necesidades de la empresa']},
-    {id:'hechos_aviso',label:'Hechos que fundan la causal',type:'textarea',ph:'Describa los hechos...'},
-    {id:'fecha_term',label:'Fecha de t�rmino',type:'text',ph:'ej: 28 de febrero de 2026'},
-  ]},
-  {id:'denuncia_dt',icon:'??',name:'Denuncia ante Dir. Trabajo',desc:'Infracci�n laboral',fields:[
-    {id:'denunciante',label:'Nombre denunciante',type:'text',ph:'Nombre completo'},
-    {id:'empresa_dt',label:'Empresa denunciada',type:'text',ph:'Raz�n social'},
-    {id:'infraccion',label:'Tipo de infracci�n',type:'select',opts:['Remuneraciones no pagadas','Horas extra no pagadas','Acoso laboral o sexual','Jornada excesiva','No pago de cotizaciones','Otra infracci�n']},
-    {id:'hechos_dt',label:'Descripci�n de los hechos',type:'textarea',ph:'Fechas, montos, testigos...'},
-  ]},
+  {id:'demanda',icon:'⚖️',name:'Demanda laboral',desc:'Despido injustificado o tutela',fields:[{id:'tribunal',label:'Tribunal',type:'text',ph:'ej: 1er Juzgado Laboral de Santiago'},{id:'demandante',label:'Nombre trabajador',type:'text',ph:'Nombre completo'},{id:'demandado',label:'Empleador/empresa',type:'text',ph:'Empresa S.A.'},{id:'causa',label:'Causal de despido',type:'text',ph:'ej: art. 161 CT'},{id:'hechos_dem',label:'Hechos',type:'textarea',ph:'Fecha inicio, cargo, remuneración, forma del despido...'},{id:'peticiones',label:'Peticiones',type:'text',ph:'ej: nulidad, indemnizaciones'}]},
+  {id:'carta_aviso',icon:'📩',name:'Carta aviso de término',desc:'Arts. 159, 160, 161 CT',fields:[{id:'empleador',label:'Razón social empleador',type:'text',ph:'Empresa S.A.'},{id:'trabajador',label:'Nombre del trabajador',type:'text',ph:'Nombre completo'},{id:'causal_aviso',label:'Causal legal',type:'select',opts:['Art. 159 N1 — Mutuo acuerdo','Art. 159 N4 — Vencimiento del plazo','Art. 160 N7 — Incumplimiento grave','Art. 161 — Necesidades de la empresa']},{id:'hechos_aviso',label:'Hechos',type:'textarea',ph:'Describa los hechos...'},{id:'fecha_term',label:'Fecha de término',type:'text',ph:'ej: 28 de febrero de 2026'}]},
+  {id:'denuncia_dt',icon:'📋',name:'Denuncia Dir. Trabajo',desc:'Infracción laboral',fields:[{id:'denunciante',label:'Nombre denunciante',type:'text',ph:'Nombre completo'},{id:'empresa_dt',label:'Empresa denunciada',type:'text',ph:'Razón social'},{id:'infraccion',label:'Tipo de infracción',type:'select',opts:['Remuneraciones no pagadas','Horas extra no pagadas','Acoso laboral o sexual','Jornada excesiva','No pago de cotizaciones','Otra infracción']},{id:'hechos_dt',label:'Hechos',type:'textarea',ph:'Fechas, montos, testigos...'}]},
 ];
 const RECLAMOS=[
-  {id:'isapre_cobertura',icon:'??',name:'Isapre � Suspensi�n de cobertura',dest:'Superintendencia de Salud',fields:[
-    {id:'afiliado',label:'Nombre del afiliado',type:'text',ph:'Nombre completo'},
-    {id:'isapre_nombre',label:'Isapre',type:'text',ph:'ej: Cruz Blanca'},
-    {id:'prestacion',label:'Prestaci�n afectada',type:'text',ph:'ej: Di�lisis, quimioterapia'},
-    {id:'perjuicio',label:'Perjuicio causado',type:'textarea',ph:'Describa el da�o concreto...'},
-  ]},
-  {id:'dt_incumplimiento',icon:'??',name:'Dir. Trabajo � Incumplimiento laboral',dest:'Direcci�n del Trabajo',fields:[
-    {id:'dt_trabajador',label:'Nombre del trabajador',type:'text',ph:'Nombre completo'},
-    {id:'dt_empresa',label:'Empresa denunciada',type:'text',ph:'Raz�n social y RUT'},
-    {id:'dt_infraccion',label:'Tipo de infracci�n',type:'select',opts:['Remuneraciones no pagadas','Horas extra no pagadas','Acoso laboral','Jornada excesiva','Despido verbal']},
-    {id:'dt_hechos',label:'Descripci�n de los hechos',type:'textarea',ph:'Fechas, montos, testigos...'},
-  ]},
+  {id:'isapre_cobertura',icon:'🏥',name:'Isapre — Suspensión cobertura',dest:'Superintendencia de Salud',fields:[{id:'afiliado',label:'Nombre del afiliado',type:'text',ph:'Nombre completo'},{id:'isapre_nombre',label:'Isapre',type:'text',ph:'ej: Cruz Blanca'},{id:'prestacion',label:'Prestación afectada',type:'text',ph:'ej: Diálisis, quimioterapia'},{id:'perjuicio',label:'Perjuicio causado',type:'textarea',ph:'Describa el daño concreto...'}]},
+  {id:'dt_incumplimiento',icon:'📋',name:'Dir. Trabajo — Incumplimiento',dest:'Dirección del Trabajo',fields:[{id:'dt_trabajador',label:'Nombre del trabajador',type:'text',ph:'Nombre completo'},{id:'dt_empresa',label:'Empresa denunciada',type:'text',ph:'Razón social y RUT'},{id:'dt_infraccion',label:'Tipo de infracción',type:'select',opts:['Remuneraciones no pagadas','Horas extra no pagadas','Acoso laboral','Jornada excesiva','Despido verbal']},{id:'dt_hechos',label:'Hechos',type:'textarea',ph:'Fechas, montos, testigos...'}]},
 ];
-const CORTES=['Santiago','San Miguel','Valpara�so','Concepci�n','Temuco','La Serena','Antofagasta','Arica','Rancagua','Talca','Puerto Montt'];
+const CORTES=['Santiago','San Miguel','Valparaíso','Concepción','Temuco','La Serena','Antofagasta','Arica','Rancagua','Talca','Puerto Montt'];
 
-// STATE
+// ══ STATE ══
 let chatMsgs=[],activeFilter='all',loading=false;
 let activeNorm='ct',activeEscrito=null,activeReclamo=null;
 let selectedMaterias=new Set(ALL_MATERIAS),prefsOpen=false;
-let activeCorte=null,offlineMode=false;
-let activeStab=0,activeTtab=0;
+let activeCorte=null,offlineMode=false,activeStab=0,activeTtab=0;
 const VIEW_IDS={chat:'vChat',norm:'vNorm',ctr:'vCtr',calc:'vCalc',caso:'vCaso',escritos:'vEscritos',alertas:'vAlertas',sumarios:'vSumarios',tribunal:'vTribunal',cortes:'vCortes',reclamos:'vReclamos'};
 const API_URL='https://jurisbot-back-end.onrender.com/consultar';
 
-// ??????????????????????????????????????????
-// GLOBAL CLICK
-// ??????????????????????????????????????????
+// ══ GLOBAL CLICK ══
 document.addEventListener('click',function(e){
   const v=e.target.closest('[data-view]');if(v){showView(v.dataset.view,+v.dataset.vi);return;}
   const f=e.target.closest('[data-filter]');if(f){setFilter(f.dataset.filter,+f.dataset.fi);return;}
@@ -884,346 +922,59 @@ document.addEventListener('click',function(e){
   const id=e.target.id;
   if(id==='btnNewChat'){goChat();return;}
   if(id==='sndBtn'){sendMsg();return;}
+  if(id==='saveChatBtn'){saveChat();return;}
   if(id==='calcBtn'){renderCalc();return;}
   if(id==='casoBtn'){analizarCaso();return;}
   if(id==='eGenBtn'){generarEscrito();return;}
   if(id==='prefsBtn'){togglePrefs();return;}
   if(id==='prefsSaveBtn'){savePrefs();return;}
   if(id==='copyEscritoBtn'){copyOutput('eOutput','copyEscritoBtn');return;}
+  if(id==='wordEscritoBtn'){downloadWord('eOutput','JurisBot_Escrito');return;}
   if(id==='offlineToggle'){toggleOffline();return;}
   if(id==='sumariosBtn'){generarSumarios();return;}
   if(id==='licenciaBtn'){generarLicencia();return;}
   if(id==='copySumBtn'){copyOutput('sumOut','copySumBtn');return;}
+  if(id==='wordSumBtn'){downloadWord('sumOut','JurisBot_Descargos');return;}
   if(id==='copyLicBtn'){copyOutput('licOut','copyLicBtn');return;}
+  if(id==='wordLicBtn'){downloadWord('licOut','JurisBot_Apelacion_Licencia');return;}
   if(id==='tribBtn'){generarFallo();return;}
   if(id==='congrBtn'){revisarCongruencia();return;}
   if(id==='copyTribBtn'){copyOutput('tribOut','copyTribBtn');return;}
+  if(id==='wordTribBtn'){downloadWord('tribOut','JurisBot_Fallo');return;}
   if(id==='copyCongrBtn'){copyOutput('congrOut','copyCongrBtn');return;}
   if(id==='cortesBtn'){verCriterioLocal();return;}
   if(id==='reclamoGenBtn'){generarReclamo();return;}
   if(id==='copyReclamoBtn'){copyOutput('reclamoOut','copyReclamoBtn');return;}
+  if(id==='wordReclamoBtn'){downloadWord('reclamoOut','JurisBot_Reclamo');return;}
 });
 
-// ??????????????????????????????????????????
-// NAVIGATION
-// ??????????????????????????????????????????
+// ══ NAVIGATION ══
 function showView(v,i){
   document.querySelectorAll('.view').forEach(el=>el.classList.remove('show'));
   document.querySelectorAll('.ttab').forEach(el=>el.classList.remove('active'));
   for(let j=0;j<=10;j++){const el=document.getElementById('sb'+j);if(el)el.classList.remove('active');}
-  const ve=document.getElementById(VIEW_IDS[v]);if(ve)ve.classList.add('show');
-  const te=document.getElementById('tt'+i);if(te)te.classList.add('active');
-  const se=document.getElementById('sb'+i);if(se)se.classList.add('active');
+  document.getElementById(VIEW_IDS[v])?.classList.add('show');
+  document.getElementById('tt'+i)?.classList.add('active');
+  document.getElementById('sb'+i)?.classList.add('active');
   if(v==='norm'){renderNormNav();renderArts();}
   if(v==='ctr'){renderCtr();}
   if(v==='alertas'){renderAlertas();}
   if(v==='escritos'){renderETypes();}
   if(v==='reclamos'){renderReclamoNav();}
   if(v==='cortes'){renderCortes();}
-  // MEJORA 3: restaurar estado al volver a la vista
   setTimeout(()=>trackFields(PERSISTENT_FIELDS),50);
 }
-function setFilter(f,i){activeFilter=f;for(let j=0;j<5;j++){const el=document.getElementById('f'+j);if(el)el.classList.remove('active');}const el=document.getElementById('f'+i);if(el)el.classList.add('active');}
-function setStab(i){activeStab=i;document.querySelectorAll('[data-stab]').forEach(b=>b.classList.remove('active'));const btn=document.querySelector('[data-stab="'+i+'"]');if(btn)btn.classList.add('active');document.getElementById('sumView0').style.display=i===0?'flex':'none';document.getElementById('sumView1').style.display=i===1?'flex':'none';}
-function setTtab(i){activeTtab=i;document.querySelectorAll('[data-ttab]').forEach(b=>b.classList.remove('active'));const btn=document.querySelector('[data-ttab="'+i+'"]');if(btn)btn.classList.add('active');document.getElementById('tribView0').style.display=i===0?'flex':'none';document.getElementById('tribView1').style.display=i===1?'flex':'none';}
+function setFilter(f,i){activeFilter=f;for(let j=0;j<5;j++){document.getElementById('f'+j)?.classList.remove('active');}document.getElementById('f'+i)?.classList.add('active');}
+function setStab(i){activeStab=i;document.querySelectorAll('[data-stab]').forEach(b=>b.classList.remove('active'));document.querySelector('[data-stab="'+i+'"]')?.classList.add('active');document.getElementById('sumView0').style.display=i===0?'flex':'none';document.getElementById('sumView1').style.display=i===1?'flex':'none';}
+function setTtab(i){activeTtab=i;document.querySelectorAll('[data-ttab]').forEach(b=>b.classList.remove('active'));document.querySelector('[data-ttab="'+i+'"]')?.classList.add('active');document.getElementById('tribView0').style.display=i===0?'flex':'none';document.getElementById('tribView1').style.display=i===1?'flex':'none';}
 
-// OFFLINE
-function toggleOffline(){offlineMode=!offlineMode;document.getElementById('odot').style.background=offlineMode?'#ff9800':'#4caf50';document.getElementById('olabel').textContent=offlineMode?'Offline':'Online';appendMsg('bot',offlineMode?'?? **Modo offline activado.** Respondo usando normativa embebida.':'?? **Modo online activado.** Respondo con IA completa.');showView('chat',0);}
-function offlineAnswer(q){const terms=q.toLowerCase().split(/\s+/).filter(w=>w.length>3);let arts=[];LEYES.forEach(l=>l.titulos.forEach(t=>t.arts.forEach(a=>{const h=('art '+a.n+' '+a.t).toLowerCase();let s=terms.reduce((acc,w)=>acc+(h.includes(w)?1:0),0);if(s>0)arts.push({s,a,ll:l.label});})));arts.sort((a,b)=>b.s-a.s);if(!arts.length)return '?? No se encontraron resultados offline. Active el modo online para an�lisis completo.';let r='?? **Resultado offline:**\n\n';arts.slice(0,4).forEach(({a,ll})=>r+='? **Art. '+a.n+'** ('+ll+')\n'+a.t+'\n\n');return r;}
+// ══ OFFLINE ══
+function toggleOffline(){offlineMode=!offlineMode;document.getElementById('odot').style.background=offlineMode?'#ff9800':'#4caf50';document.getElementById('olabel').textContent=offlineMode?'Offline':'Online';appendMsg('bot',offlineMode?'🔌 **Modo offline activado.**':'🌐 **Modo online activado.**');showView('chat',0);}
+function offlineAnswer(q){const terms=q.toLowerCase().split(/\s+/).filter(w=>w.length>3);let arts=[];LEYES.forEach(l=>l.titulos.forEach(t=>t.arts.forEach(a=>{const h=('art '+a.n+' '+a.t).toLowerCase();let s=terms.reduce((acc,w)=>acc+(h.includes(w)?1:0),0);if(s>0)arts.push({s,a,ll:l.label});})));arts.sort((a,b)=>b.s-a.s);if(!arts.length)return '⚠️ No se encontraron resultados offline.';let r='📖 **Resultado offline:**\n\n';arts.slice(0,4).forEach(({a,ll})=>r+='▸ **Art. '+a.n+'** ('+ll+')\n'+a.t+'\n\n');return r;}
 
-// ??????????????????????????????????????????
-// CHAT
-// ??????????????????????????????????????????
+// ══ CHAT ══
 function setQ(txt){showView('chat',0);const inp=document.getElementById('inp');inp.value=txt;aResize(inp);inp.focus();}
 function goChat(){chatMsgs=[];renderWelcome();showView('chat',0);}
-function renderWelcome(){const m=document.getElementById('msgs');const s=WELCOME_SUGGS.map(x=>'<div class="sugg" data-qkey="'+x.k+'"><strong>'+x.label+'</strong>'+x.desc+'</div>').join('');m.innerHTML='<div class="welcome" id="welcome"><div style="font-size:42px">??</div><h2>JurisBot Laboral Chile</h2><p>Chat jur�dico integral: CT, Ley 16.744, Ley 20.940, Estatuto Administrativo, CGR, SUSESO y m�s.</p><div class="suggs">'+s+'</div></div>';}
+function renderWelcome(){const m=document.getElementById('msgs');const s=WELCOME_SUGGS.map(x=>'<div class="sugg" data-qkey="'+x.k+'"><strong>'+x.label+'</strong>'+x.desc+'</div>').join('');m.innerHTML='<div class="welcome"><div style="font-size:42px">⚖️</div><h2>JurisBot Laboral Chile</h2><p>Chat jurídico integral: CT, Ley 16.744, Ley 20.940, Estatuto Administrativo, CGR, SUSESO y más.</p><div class="suggs">'+s+'</div></div>';}
 function aResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,90)+'px';}
-function appendMsg(role,content){const w=document.getElementById('welcome');if(w)w.remove();const m=document.getElementById('msgs');const d=document.createElement('div');d.className='msg '+role;const av=document.createElement('div');av.className='av '+(role==='bot'?'ba':'ua');av.textContent=role==='bot'?'??':'AB';const b=document.createElement('div');b.className='bubble';b.innerHTML=role==='bot'?formatBot(content):escH(content);d.appendChild(av);d.appendChild(b);m.appendChild(d);m.scrollTop=m.scrollHeight;}
-function escH(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-function formatBot(t){let h=escH(t).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>');h='<p>'+h+'</p>';return h;}
-function showTyping(){const m=document.getElementById('msgs');const d=document.createElement('div');d.className='msg bot';d.id='typ';d.innerHTML='<div class="av ba">??</div><div class="bubble typing"><span></span><span></span><span></span></div>';m.appendChild(d);m.scrollTop=m.scrollHeight;}
-function removeTyping(){const t=document.getElementById('typ');if(t)t.remove();}
-async function callAPI(prompt){const res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pregunta:prompt})});if(!res.ok)throw new Error('Error del servidor: '+res.status);const data=await res.json();return data.respuesta_legal||'Sin respuesta del servidor.';}
-async function sendMsg(){const inp=document.getElementById('inp');const txt=inp.value.trim();if(!txt||loading)return;loading=true;document.getElementById('sndBtn').disabled=true;inp.value='';inp.style.height='auto';appendMsg('user',txt);if(offlineMode){const r=offlineAnswer(txt);appendMsg('bot',r);loading=false;document.getElementById('sndBtn').disabled=false;inp.focus();return;}let content=txt;const fl={pjud:'Poder Judicial',dt:'Direcci�n del Trabajo',tc:'Tribunal Constitucional',ctr:'Contralor�a General'};if(activeFilter!=='all')content+='\n[Filtro: '+fl[activeFilter]+']';chatMsgs.push({role:'user',content});showTyping();try{const reply=await callAPI(content);removeTyping();chatMsgs.push({role:'assistant',content:reply});appendMsg('bot',reply);}catch(err){removeTyping();appendMsg('bot','?? Error al conectar con el servidor. Verifique su conexi�n e intente nuevamente.');}loading=false;document.getElementById('sndBtn').disabled=false;inp.focus();}
-
-// ??????????????????????????????????????????
-// NORMATIVA
-// ??????????????????????????????????????????
-function renderNormNav(){const nav=document.getElementById('normNav');nav.innerHTML='';LEYES.forEach(l=>{const b=document.createElement('button');b.className='nbtn'+(l.id===activeNorm?' active':'');b.innerHTML=l.label+'<span>'+l.sub+'</span>';b.addEventListener('click',()=>{activeNorm=l.id;renderNormNav();renderArts();});nav.appendChild(b);});}
-function renderArts(q){const panel=document.getElementById('artsPanel');if(q&&q.length>1){const term=q.toLowerCase();let html='';let found=0;LEYES.forEach(l=>l.titulos.forEach(t=>t.arts.forEach(a=>{if(('art '+a.n).includes(term)||a.t.toLowerCase().includes(term)){html+=buildArt(a,l.label);found++;}})));panel.innerHTML=found?'<div class="ley-title">Resultados para "'+q+'"</div>'+html:'<div class="no-res">Sin resultados</div>';return;}const ley=LEYES.find(l=>l.id===activeNorm);if(!ley)return;let html='<div class="ley-title">'+ley.label+'</div><div class="ley-sub">'+ley.sub+'</div>';ley.titulos.forEach(t=>{html+='<div class="tit-title">'+t.n+'</div>';t.arts.forEach(a=>html+=buildArt(a));});panel.innerHTML=html;}
-function buildArt(a,ctx){const q='Jurisprudencia art�culo '+a.n+' C�digo del Trabajo';return '<div class="art-card"><div class="art-num">Art�culo '+a.n+(ctx?' � '+ctx:'')+'</div><div class="art-text">'+a.t+'</div><button class="consult-btn" data-consult="'+q+'">?? Consultar jurisprudencia</button></div>';}
-
-// ??????????????????????????????????????????
-// CONTRALOR�A
-// ??????????????????????????????????????????
-function renderCtr(q){const grid=document.getElementById('ctrGrid');grid.innerHTML='';const items=q?CTR.filter(d=>d.mat.toLowerCase().includes(q.toLowerCase())||d.num.includes(q)):CTR;if(!items.length){grid.innerHTML='<div class="no-res" style="grid-column:1/-1">Sin resultados</div>';return;}items.forEach(d=>{const card=document.createElement('div');card.className='ctr-card';const consult='Dictamen Contraloria N '+d.num+' '+d.mat;card.innerHTML='<div class="ctr-num">Dictamen N� '+d.num+'</div><div class="ctr-mat">'+d.mat+'</div><div class="ctr-res">'+d.res+'</div><div class="ctr-tags">'+d.tags.map(t=>'<span class="ctag">'+t+'</span>').join('')+'</div><button class="consult-btn" style="margin-top:9px" data-consult="'+consult+'">?? Consultar al bot</button>';grid.appendChild(card);});}
-
-// ??????????????????????????????????????????
-// MEJORA 1: CALCULADORA REFACTORIZADA
-// Funci�n modular con validaci�n por campo,
-// manejo de errores y nuevas variables:
-// vacaciones proporcionales.
-// ??????????????????????????????????????????
-
-// ??????????????????????????????????????????
-// SANITIZACI�N Y PARSING SEGURO DE INPUTS
-// Previene crash por inputs malformados.
-// Acepta: "1.500.000", "1,500,000", "$1500000",
-//         "1 500 000", "1500000", etc.
-// ??????????????????????????????????????????
-
-/**
- * Limpia y convierte a n�mero cualquier string de remuneraci�n.
- * Elimina $, puntos de miles, comas, espacios y otros caracteres
- * no num�ricos antes de parsear. Envuelto en try-catch total.
- *
- * @param {string|null|undefined} raw - Valor crudo del input
- * @returns {number|null} - N�mero v�lido > 0, o null si inv�lido/vac�o
- */
-function sanitizeAndParseNumber(raw) {
-  try {
-    // Guardia 1: null, undefined o tipo inesperado ? retorna null sin crash
-    if (raw === null || raw === undefined) return null;
-
-    // Guardia 2: convertir a string por si llega como n�mero u otro tipo
-    let str = String(raw);
-
-    // Guardia 3: string vac�o o solo espacios ? retorna null sin error
-    if (str.trim() === '') return null;
-
-    // ?? LIMPIEZA PASO A PASO ??
-    str = str.replace(/[$���]/g, '');   // eliminar s�mbolos de moneda
-    str = str.replace(/\s/g, '');        // eliminar todos los espacios
-    str = str.replace(/,/g, '');         // eliminar comas (separador de miles anglosaj�n)
-
-    // Detectar si el punto es separador decimal (ej: "1500.50")
-    // o separador de miles (ej: "1.500.000").
-    // Regla: si hay m�s de un punto, SON separadores de miles ? eliminar.
-    // Si hay exactamente un punto y <= 2 d�gitos tras �l ? decimal.
-    const puntos = (str.match(/\./g) || []).length;
-    if (puntos > 1) {
-      // "1.500.000" ? eliminar todos los puntos ? "1500000"
-      str = str.replace(/\./g, '');
-    } else if (puntos === 1) {
-      const parteDecimal = str.split('.')[1];
-      if (parteDecimal && parteDecimal.length > 2) {
-        // "1.500" con 3 d�gitos tras punto ? separador de miles
-        str = str.replace(/\./g, '');
-      }
-      // Si tiene 1-2 d�gitos tras punto ? es decimal, dejar como est�
-    }
-
-    // Eliminar cualquier car�cter residual que no sea d�gito o punto decimal
-    str = str.replace(/[^\d.]/g, '');
-
-    // Guardia 4: si tras limpiar queda vac�o o solo "." ? inv�lido
-    if (str === '' || str === '.') return null;
-
-    // Convertir a float con parseFloat (manejo seguro de decimales)
-    const num = parseFloat(str);
-
-    // Guardia 5: NaN, Infinity, negativos ? inv�lido
-    if (!isFinite(num) || isNaN(num) || num < 0) return null;
-
-    return num;
-
-  } catch (err) {
-    // Guardia 6: captura cualquier error inesperado ? nunca crashea
-    console.warn('[JurisBot] sanitizeAndParseNumber error:', err);
-    return null;
-  }
-}
-
-/**
- * Valida un campo num�rico y muestra/oculta su mensaje de error.
- * Para el campo de remuneraci�n, usa sanitizeAndParseNumber().
- * Para los dem�s campos num�ricos simples, usa parseFloat directo.
- *
- * @param {string} id - ID del input
- * @param {string} errId - ID del span de error
- * @param {number} min - Valor m�nimo permitido
- * @param {number} max - Valor m�ximo permitido
- * @param {boolean} isCurrency - true = pasar por sanitizeAndParseNumber
- * @returns {number|null}
- */
-function validateField(id, errId, min, max=Infinity, isCurrency=false) {
-  const el = document.getElementById(id);
-  const errEl = document.getElementById(errId);
-
-  // Limpiar estado visual previo
-  el.classList.remove('input-error');
-  errEl.classList.remove('show');
-
-  // Obtener valor seg�n tipo de campo
-  const val = isCurrency
-    ? sanitizeAndParseNumber(el.value)   // campos de dinero: sanitizar
-    : parseFloat(el.value);              // campos num�ricos simples
-
-  // Validar rango
-  if (val === null || isNaN(val) || val < min || val > max) {
-    el.classList.add('input-error');
-    errEl.classList.add('show');
-    return null;
-  }
-  return val;
-}
-
-/**
- * Calcula el monto de vacaciones proporcionales.
- * @param {number} rem - Remuneraci�n mensual bruta
- * @param {number} diasVac - D�as h�biles de vacaciones proporcionales
- * @returns {number} - Monto en pesos
- */
-function calcVacacionesProporcionales(rem, diasVac) {
-  if (!diasVac || diasVac <= 0) return 0;
-  // Valor d�a h�bil = remuneraci�n / 30 (d�as corridos equivalentes)
-  const valorDia = rem / 30;
-  return valorDia * diasVac;
-}
-
-/**
- * Determina el recargo legal seg�n la causal de despido.
- * @param {string} tipo - C�digo del tipo de t�rmino
- * @returns {{ factor: number, label: string }}
- */
-function getRecargo(tipo) {
-  const map = {
-    nec: { factor: 0,   label: 'Sin recargo (art. 161 CT)' },
-    inj: { factor: 0.3, label: 'Recargo 30% (art. 168 a) CT' },
-    inv: { factor: 0.5, label: 'Recargo 50% (art. 168 b) CT' },
-    ind: { factor: 0.8, label: 'Recargo 80% (art. 171 CT)' },
-  };
-  return map[tipo] || map.nec;
-}
-
-/**
- * FUNCI�N PRINCIPAL REFACTORIZADA
- * Orquesta la validaci�n, el c�lculo y el renderizado del resultado.
- */
-function renderCalc() {
-  // ?? Paso 1: validar todos los campos ??
-  const rem    = validateField('cRem',    'errRem',   1, Infinity, true); // ? isCurrency=true
-  const anios  = validateField('cAnios',  'errAnios', 1, 50);
-  const meses  = validateField('cMeses',  'errMeses', 0, 11);
-  const vacDias= validateField('cVacProp','errVac',   0, 25);
-
-  // Si alg�n campo fall�, detener y no calcular
-  if (rem === null || anios === null || meses === null || vacDias === null) {
-    document.getElementById('calcOut').innerHTML =
-      '<div class="empty-box"><span style="font-size:24px">??</span><span>Corrija los campos marcados en rojo</span></div>';
-    return;
-  }
-
-  // ?? Paso 2: obtener otros inputs (sin validaci�n de rango) ??
-  const tipo  = document.getElementById('cTipo').value;
-  const aviso = document.getElementById('cAviso').value;
-
-  // ?? Paso 3: c�lculo modular ??
-  // Fracci�n: si hay 6+ meses, contar como a�o adicional (art. 163 CT)
-  const fraccion    = meses >= 6 ? 1 : 0;
-  // Tope legal: 11 a�os (art. 163 inc. 2� CT)
-  const aniosTope   = Math.min(anios + fraccion, 11);
-  // Indemnizaci�n base por a�os de servicio
-  const indBase     = rem * aniosTope;
-  // Recargo seg�n causal
-  const { factor, label: labelRecargo } = getRecargo(tipo);
-  const montoRecargo = indBase * factor;
-  const indTotal    = indBase + montoRecargo;
-  // Sustitutiva de aviso previo (art. 162 CT)
-  const sust        = aviso === 'no' ? rem : 0;
-  // Vacaciones proporcionales
-  const vacMonto    = calcVacacionesProporcionales(rem, vacDias);
-  // TOTAL
-  const total       = indTotal + sust + vacMonto;
-
-  // ?? Paso 4: renderizar resultado ??
-  let html = `
-    <div class="res-row"><span class="res-label">Remuneraci�n base</span><span class="res-val">${fmt(rem)}</span></div>
-    <div class="res-row"><span class="res-label">A�os computados (tope 11)</span><span class="res-val">${aniosTope} a�o(s)</span></div>
-    <div class="res-row"><span class="res-label">Indemnizaci�n por a�os de servicio (art. 163 CT)</span><span class="res-val">${fmt(indBase)}</span></div>
-  `;
-  if (factor > 0) {
-    html += `<div class="res-row"><span class="res-label">${labelRecargo}</span><span class="res-val">+ ${fmt(montoRecargo)}</span></div>`;
-  }
-  if (sust > 0) {
-    html += `<div class="res-row"><span class="res-label">Sustitutiva de aviso previo (art. 162 CT)</span><span class="res-val">+ ${fmt(sust)}</span></div>`;
-  }
-  if (vacMonto > 0) {
-    html += `<div class="res-row"><span class="res-label">Vacaciones proporcionales (${vacDias} d�as h�biles)</span><span class="res-val">+ ${fmt(vacMonto)}</span></div>`;
-  }
-  html += `
-    <div class="res-total">
-      <div class="amount">${fmt(total)}</div>
-      <p>Total estimado bruto</p>
-    </div>
-    <div class="art-ref">Base legal: Art. 162 � Art. 163 � Art. 168 CT</div>
-    <div class="calc-disclaimer">
-      ?? <strong>Estimaci�n orientativa.</strong> No incluye cotizaciones previsionales adeudadas, bono de t�rmino u otros conceptos espec�ficos del contrato. Verifique siempre con un abogado o en <strong>dt.gob.cl</strong>.
-    </div>
-  `;
-  document.getElementById('calcOut').innerHTML = html;
-}
-
-// ??????????????????????????????????????????
-// AN�LISIS DE CASO
-// ??????????????????????????????????????????
-async function analizarCaso(){const hechos=document.getElementById('cHechos').value.trim();if(!hechos){alert('Por favor, describa los hechos del caso.');return;}const btn=document.getElementById('casoBtn');btn.disabled=true;btn.textContent='?? Analizando...';const out=document.getElementById('casoOut');out.innerHTML='<div class="empty-box"><span style="font-size:30px">?</span><span>Analizando...</span></div>';const p='Analiza el caso laboral chileno:\nPARTE: '+document.getElementById('cParte').value+'\nAREA: '+document.getElementById('cArea').value+'\nHECHOS: '+hechos+(document.getElementById('cObj').value?'\nOBJETIVO: '+document.getElementById('cObj').value:'')+'\n\nEntrega: 1.CALIFICACION JURIDICA 2.NORMAS APLICABLES 3.JURISPRUDENCIA 4.FORTALEZAS Y DEBILIDADES 5.OPCIONES PROCESALES Y PLAZOS 6.ESTRATEGIA RECOMENDADA';try{const r=await callAPI(p);out.innerHTML='<div style="font-size:12px;line-height:1.7">'+formatBot(r)+'</div>';}catch(e){out.innerHTML='<div class="empty-box">?? Error de conexi�n.</div>';}btn.disabled=false;btn.textContent='?? Analizar caso';}
-
-// ??????????????????????????????????????????
-// ALERTAS
-// ??????????????????????????????????????????
-function renderAlertas(){renderPrefsChips();const filtered=SENTENCIAS.filter(s=>selectedMaterias.has(s.materia));document.getElementById('alertaSubtitle').textContent=filtered.length+' alertas activas';const list=document.getElementById('alertasList');if(!filtered.length){list.innerHTML='<div class="empty-box">No hay alertas para las materias seleccionadas.</div>';return;}list.innerHTML=filtered.map(s=>{const bc=s.tipo==='cambio'?'badge-cambio':s.tipo==='nuevo'?'badge-nuevo':'badge-ratifica';  const bl=s.tipo==='cambio'?'?? Cambio':s.tipo==='nuevo'?'?? Nuevo':'? Ratifica';const tldr=s.tldr.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');return '<div class="alerta-card"><div class="alerta-top"><div><div class="alerta-tribunal">'+s.tribunal+'</div><div class="alerta-titulo">'+s.titulo+'</div></div><span class="alerta-badge '+bc+'">'+bl+'</span></div><div class="alerta-tldr">'+tldr+'</div><div class="alerta-footer"><span class="materia-tag">'+s.materia+'</span><span class="alerta-fecha">?? '+s.fecha+'</span><button class="citar-btn" data-cita="'+s.cita+'">?? Copiar cita</button></div></div>';}).join('');}
-function renderPrefsChips(){const c=document.getElementById('prefsChips');if(!c)return;c.innerHTML=ALL_MATERIAS.map(m=>'<div class="pchip'+(selectedMaterias.has(m)?' sel':'')+'" data-materia="'+m+'">'+m+'</div>').join('');}
-function togglePrefs(){prefsOpen=!prefsOpen;document.getElementById('prefsPanel').style.display=prefsOpen?'block':'none';document.getElementById('prefsBtn').textContent=prefsOpen?'? Cerrar':'?? Mis materias';if(prefsOpen)renderPrefsChips();}
-function savePrefs(){togglePrefs();renderAlertas();}
-function copyCita(cita,btn){navigator.clipboard.writeText(cita).then(()=>{const t=btn.textContent;btn.textContent='? Copiado!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='?? Copiar cita';btn.classList.remove('copied');},2500);});}
-
-// ESCRITOS
-function renderETypes(){const c=document.getElementById('eTypes');c.innerHTML='';ESCRITOS.forEach(e=>{const d=document.createElement('div');d.className='etype-card'+(activeEscrito===e.id?' active':'');d.dataset.etype=e.id;d.innerHTML='<div class="etype-icon">'+e.icon+'</div><div class="etype-name">'+e.name+'</div><div class="etype-desc">'+e.desc+'</div>';c.appendChild(d);});}
-function selectEscrito(id){activeEscrito=id;renderETypes();const e=ESCRITOS.find(x=>x.id===id);document.getElementById('eFormTitle').textContent=e.icon+' '+e.name;document.getElementById('eFields').innerHTML=buildFields(e.fields,'ef_');document.getElementById('eGenBtn').style.display='flex';}
-async function generarEscrito(){const e=ESCRITOS.find(x=>x.id===activeEscrito);if(!e)return;const datos=e.fields.map(f=>f.label+': '+(document.getElementById('ef_'+f.id)?.value||'')).join('\n');const btn=document.getElementById('eGenBtn');const spin=document.getElementById('eSpin');btn.disabled=true;spin.style.display='inline-block';document.getElementById('eOutput').innerHTML='<div class="empty-box"><span style="font-size:28px">?</span><span>Generando...</span></div>';const p='Genera un '+e.name+' formal en materia laboral chilena con:\n\n'+datos+'\n\nFormato jur�dico chileno, cita art�culos CT, usa lenguaje formal, marca [COMPLETAR] donde falten datos.';try{const r=await callAPI(p);document.getElementById('eOutput').textContent=r;}catch(e){document.getElementById('eOutput').innerHTML='<div class="empty-box">?? Error.</div>';}btn.disabled=false;spin.style.display='none';}
-
-// SUMARIOS
-async function generarSumarios(){const cargos=document.getElementById('s_cargos').value.trim();const hechos=document.getElementById('s_hechos').value.trim();if(!cargos||!hechos){alert('Complete al menos los cargos y los hechos.');return;}const btn=document.getElementById('sumariosBtn');const spin=document.getElementById('sumarSpin');btn.disabled=true;spin.style.display='inline-block';const out=document.getElementById('sumOut');out.innerHTML='<div class="empty-box"><span style="font-size:28px">?</span><span>Generando...</span></div>';const p='Genera descargos formales para sumario administrativo (Ley 18.834):\n\nFUNCIONARIO: '+document.getElementById('s_cargo').value+'\nSERVICIO: '+document.getElementById('s_servicio').value+'\nCARGOS: '+cargos+'\nHECHOS: '+hechos+'\nATENUANTES: '+document.getElementById('s_atenuantes').value;try{const r=await callAPI(p);out.innerHTML='<div style="font-size:12px;line-height:1.7;white-space:pre-wrap;font-family:inherit">'+escH(r)+'</div>';}catch(e){out.innerHTML='<div class="empty-box">?? Error.</div>';}btn.disabled=false;spin.style.display='none';}
-
-// LICENCIAS
-async function generarLicencia(){const rechazo=document.getElementById('l_rechazo').value.trim();const dx=document.getElementById('l_diagnostico').value.trim();if(!rechazo||!dx){alert('Complete el motivo de rechazo y el diagn�stico.');return;}const btn=document.getElementById('licenciaBtn');const spin=document.getElementById('licSpin');btn.disabled=true;spin.style.display='inline-block';const out=document.getElementById('licOut');out.innerHTML='<div class="empty-box"><span style="font-size:28px">?</span><span>Generando...</span></div>';const org={compin:'COMPIN',suseso:'SUSESO',isapre:'ISAPRE',mutualidad:'Mutualidad'};const p='Genera recurso de apelaci�n ante '+org[document.getElementById('l_organismo').value]+' por rechazo de licencia m�dica:\n\nPACIENTE: '+document.getElementById('l_nombre').value+'\nTIPO: '+document.getElementById('l_tipo').value+'\nRECHAZO: '+rechazo+'\nDIAGN�STICO: '+dx+'\nANTECEDENTES: '+document.getElementById('l_antecedentes').value;try{const r=await callAPI(p);out.innerHTML='<div style="font-size:12px;line-height:1.7;white-space:pre-wrap;font-family:inherit">'+escH(r)+'</div>';}catch(e){out.innerHTML='<div class="empty-box">?? Error.</div>';}btn.disabled=false;spin.style.display='none';}
-
-// TRIBUNAL
-async function generarFallo(){const accion=document.getElementById('tr_accion').value.trim();const hechos=document.getElementById('tr_hechos').value.trim();if(!accion||!hechos){alert('Complete la acci�n ejercida y los hechos probados.');return;}const btn=document.getElementById('tribBtn');const spin=document.getElementById('tribSpin');btn.disabled=true;spin.style.display='inline-block';const out=document.getElementById('tribOut');out.innerHTML='<div class="empty-box"><span style="font-size:28px">?</span><span>Generando...</span></div>';const p='Genera borrador de sentencia laboral chilena (VISTOS, CONSIDERANDOS, RESOLUTIVO):\n\nTRIBUNAL: '+document.getElementById('tr_tribunal').value+'\nROL: '+document.getElementById('tr_rol').value+'\nPROCEDIMIENTO: '+document.getElementById('tr_proc').value+'\nACCI�N: '+accion+'\nDEFENSA: '+document.getElementById('tr_defensa').value+'\nHECHOS PROBADOS: '+hechos;try{const r=await callAPI(p);out.innerHTML='<div style="font-size:12px;line-height:1.7;white-space:pre-wrap;font-family:inherit">'+escH(r)+'</div>';}catch(e){out.innerHTML='<div class="empty-box">?? Error.</div>';}btn.disabled=false;spin.style.display='none';}
-async function revisarCongruencia(){const dem=document.getElementById('cg_demandante').value.trim();const fallo=document.getElementById('cg_fallo').value.trim();if(!dem||!fallo){alert('Complete los argumentos del demandante y el fallo.');return;}const btn=document.getElementById('congrBtn');const spin=document.getElementById('congrSpin');btn.disabled=true;spin.style.display='inline-block';const out=document.getElementById('congrOut');out.innerHTML='<div class="empty-box"><span style="font-size:28px">?</span><span>Revisando...</span></div>';const p='Control de congruencia de sentencia laboral chilena:\n\nARGUMENTOS DEMANDANTE:\n'+dem+'\n\nARGUMENTOS DEMANDADO:\n'+document.getElementById('cg_demandado').value+'\n\nBORRADOR FALLO:\n'+fallo+'\n\nAnaliza: argumentos abordados, argumentos omitidos, riesgo de nulidad (art. 478 CT), recomendaciones.';try{const r=await callAPI(p);out.innerHTML='<div style="font-size:12px;line-height:1.7">'+formatBot(r)+'</div>';}catch(e){out.innerHTML='<div class="empty-box">?? Error.</div>';}btn.disabled=false;spin.style.display='none';}
-
-// CORTES
-function renderCortes(){const c=document.getElementById('corteBtns');c.innerHTML='';CORTES.forEach(corte=>{const b=document.createElement('button');b.className='corte-btn'+(activeCorte===corte?' active':'');b.dataset.corte=corte;b.textContent=corte;c.appendChild(b);});}
-async function verCriterioLocal(){if(!activeCorte){alert('Seleccione una Corte de Apelaciones.');return;}const materia=document.getElementById('corteMateria').value;const btn=document.getElementById('cortesBtn');btn.disabled=true;btn.textContent='?? Consultando...';const out=document.getElementById('cortesOut');out.innerHTML='<div class="empty-box"><span style="font-size:28px">???</span><span>Consultando...</span></div>';const p='Criterio jurisprudencial de la Corte de Apelaciones de '+activeCorte+' en materia de "'+materia+'" (derecho laboral chileno).\n\nIncluye: 1.TENDENCIA GENERAL 2.CRITERIOS ESPEC�FICOS 3.DIFERENCIAS CON SUPREMA 4.FALLOS REPRESENTATIVOS 5.CONSEJO ESTRAT�GICO';try{const r=await callAPI(p);out.innerHTML='<div style="font-size:12px;line-height:1.7">'+formatBot(r)+'</div>';}catch(e){out.innerHTML='<div class="empty-box">?? Error.</div>';}btn.disabled=false;btn.textContent='??? Ver criterio local';}
-
-// RECLAMOS
-function renderReclamoNav(){const c=document.getElementById('reclamoNav');c.innerHTML='';RECLAMOS.forEach(r=>{const d=document.createElement('div');d.className='reclamo-card'+(activeReclamo===r.id?' active':'');d.dataset.rtype=r.id;d.innerHTML='<div class="reclamo-icon">'+r.icon+'</div><div class="reclamo-name">'+r.name+'</div><div class="reclamo-dest">? '+r.dest+'</div>';c.appendChild(d);});}
-function selectReclamo(id){activeReclamo=id;renderReclamoNav();const r=RECLAMOS.find(x=>x.id===id);document.getElementById('reclamoTitle').textContent=r.icon+' '+r.name;document.getElementById('reclamoFields').innerHTML=buildFields(r.fields,'rf_');document.getElementById('reclamoGenBtn').style.display='flex';}
-async function generarReclamo(){const r=RECLAMOS.find(x=>x.id===activeReclamo);if(!r)return;const datos=r.fields.map(f=>f.label+': '+(document.getElementById('rf_'+f.id)?.value||'')).join('\n');const btn=document.getElementById('reclamoGenBtn');const spin=document.getElementById('reclamoSpin');btn.disabled=true;spin.style.display='inline-block';document.getElementById('reclamoOut').innerHTML='<div class="empty-box"><span style="font-size:28px">?</span><span>Generando...</span></div>';const p='Genera reclamo formal para '+r.dest+':\n\n'+datos+'\n\nFormato correcto para presentaci�n ante '+r.dest+', cita normativa infringida, petici�n concreta, se�ala documentos a acompa�ar.';try{const res=await callAPI(p);document.getElementById('reclamoOut').textContent=res;}catch(e){document.getElementById('reclamoOut').innerHTML='<div class="empty-box">?? Error.</div>';}btn.disabled=false;spin.style.display='none';}
-
-// UTILS
-function fmt(n){return new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',maximumFractionDigits:0}).format(n);}
-function buildFields(fields,prefix){return fields.map(f=>{if(f.type==='select')return '<div class="efield"><label>'+f.label+'</label><select id="'+prefix+f.id+'">'+f.opts.map(o=>'<option>'+o+'</option>').join('')+'</select></div>';if(f.type==='textarea')return '<div class="efield"><label>'+f.label+'</label><textarea id="'+prefix+f.id+'" rows="3" placeholder="'+f.ph+'"></textarea></div>';return '<div class="efield"><label>'+f.label+'</label><input id="'+prefix+f.id+'" type="text" placeholder="'+f.ph+'"></div>';}).join('');}
-function copyOutput(elId,btnId){const el=document.getElementById(elId);const t=el.textContent||el.innerText;navigator.clipboard.writeText(t).then(()=>{const b=document.getElementById(btnId);if(!b)return;const orig=b.textContent;b.textContent='? Copiado';setTimeout(()=>b.textContent=orig,2500);});}
-
-// ??????????????????????????????????????????
-// INIT
-// ??????????????????????????????????????????
-document.addEventListener('DOMContentLoaded', function() {
-  renderWelcome();
-
-  const inp = document.getElementById('inp');
-  inp.addEventListener('keydown', function(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();} });
-  inp.addEventListener('input', function() { aResize(this); });
-
-  document.getElementById('normSearch').addEventListener('input', function() { renderArts(this.value); });
-  document.getElementById('ctrSearch').addEventListener('input', function() { renderCtr(this.value); });
-
-  // MEJORA 3: inicializar tracking de persistencia en campos est�ticos
-  // (los campos din�micos de escritos/reclamos se trackean al renderizarse)
-  trackFields(PERSISTENT_FIELDS);
-});
-</script>
-</body>
-</html>
+function appendMsg(role,content){document.querySelector('#msgs .welcome')?.remove();const m=document.getElementById('msgs');const d=document.createElement('div');d.className='msg '+role;const av=document.createElement('div');av.className='av '+(role==='bot'?'ba':'ua');av.textContent=role==='bot'?'⚖️':'AB';const b=document.createElement('div');b.className='bubble';b.innerHTML=role==='bot'?formatBot(content):escH(content);d.appendChild(av);d.appendChild(b);m.appendChild(d);m.scrollTop=m.scrollHeight;}
