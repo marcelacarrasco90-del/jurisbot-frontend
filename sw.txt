@@ -1,0 +1,118 @@
+// ══════════════════════════════════════════
+// JurisBot — Service Worker (sw.js)
+// Estrategia: Cache First para assets estáticos
+//             Network First para llamadas a la API
+// Incrementa CACHE_VERSION al hacer deploy para
+// invalidar el caché anterior automáticamente.
+// ══════════════════════════════════════════
+
+const CACHE_VERSION   = 'jurisbot-v1.0.0';
+const CACHE_STATIC    = `${CACHE_VERSION}-static`;
+const CACHE_DYNAMIC   = `${CACHE_VERSION}-dynamic`;
+
+// Archivos que se cachean en la instalación (shell de la app)
+const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+];
+
+// Dominios que NUNCA deben cachearse (API en vivo)
+const NETWORK_ONLY_PATTERNS = [
+  'jurisbot-back-end.onrender.com',
+  'googletagmanager.com',
+  'google-analytics.com',
+];
+
+// ── INSTALL: precachear el shell estático ──
+self.addEventListener('install', event => {
+  console.log('[SW] Instalando versión:', CACHE_VERSION);
+  event.waitUntil(
+    caches.open(CACHE_STATIC)
+      .then(cache => {
+        console.log('[SW] Cacheando assets estáticos...');
+        return cache.addAll(STATIC_ASSETS);
+      })
+      .then(() => self.skipWaiting()) // activar inmediatamente sin esperar
+  );
+});
+
+// ── ACTIVATE: limpiar cachés de versiones anteriores ──
+self.addEventListener('activate', event => {
+  console.log('[SW] Activando versión:', CACHE_VERSION);
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key !== CACHE_STATIC && key !== CACHE_DYNAMIC)
+          .map(key => {
+            console.log('[SW] Eliminando caché obsoleto:', key);
+            return caches.delete(key);
+          })
+      )
+    ).then(() => self.clients.claim()) // tomar control de todas las pestañas abiertas
+  );
+});
+
+// ── FETCH: interceptar peticiones ──
+self.addEventListener('fetch', event => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // 1. Ignorar peticiones que no son GET
+  if (request.method !== 'GET') return;
+
+  // 2. Network Only para API y analítica (siempre datos frescos)
+  const isNetworkOnly = NETWORK_ONLY_PATTERNS.some(p => url.hostname.includes(p));
+  if (isNetworkOnly) {
+    event.respondWith(
+      fetch(request).catch(() =>
+        new Response(
+          JSON.stringify({ error: 'Sin conexión. Active el modo offline en la app.' }),
+          { status: 503, headers: { 'Content-Type': 'application/json' } }
+        )
+      )
+    );
+    return;
+  }
+
+  // 3. Cache First para assets estáticos (HTML, íconos, manifest)
+  event.respondWith(
+    caches.match(request).then(cached => {
+      if (cached) {
+        // Hay caché → devolver inmediatamente y actualizar en segundo plano
+        fetchAndUpdateCache(request);
+        return cached;
+      }
+      // No hay caché → ir a red y guardar en caché dinámico
+      return fetchAndUpdateCache(request);
+    })
+  );
+});
+
+// ── Helper: fetch + guardar en caché dinámico ──
+function fetchAndUpdateCache(request) {
+  return fetch(request)
+    .then(response => {
+      // Solo cachear respuestas válidas
+      if (!response || response.status !== 200 || response.type === 'opaque') {
+        return response;
+      }
+      const cloned = response.clone();
+      caches.open(CACHE_DYNAMIC).then(cache => cache.put(request, cloned));
+      return response;
+    })
+    .catch(() => {
+      // Sin red y sin caché: devolver página offline si existe
+      return caches.match('/index.html');
+    });
+}
+
+// ── Mensaje desde la app para forzar actualización ──
+self.addEventListener('message', event => {
+  if (event.data === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
